@@ -858,10 +858,7 @@ function ERPSystemLuxury() {
             overflowY: 'auto',
             position: 'relative',
           }}>
-            {activeModule === 'dashboard' && (
-              <DashboardModule theme={currentTheme} language={language} isDarkMode={isDarkMode} />
-            )}
-            {activeModule === 'employees' && (
+            {(activeModule === 'dashboard' || activeModule === 'employees') && (
               <HRDashboard theme={currentTheme} language={language} isDarkMode={isDarkMode} />
             )}
             {activeModule === 'attendance' && (
