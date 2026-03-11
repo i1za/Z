@@ -7,37 +7,41 @@ import {
   FiTrendingUp, FiTrendingDown, FiCheckCircle, FiAlertCircle
 } from 'react-icons/fi';
 import HRDashboard from './components/HRDashboard';
+import LoginPage from './components/LoginPage';
 
 // ═══════════════════════════════════════════════
-// Brand Colors - Eatemad Official Palette
+// Brand Colors - Eatemad Official Palette (Matching HR1)
 // ═══════════════════════════════════════════════
 const Colors = {
   // Primary Brand Colors - Bronze & Gold
-  bronze: "#995d26",
-  bronzeDark: "#7a4a1e",
-  bronzeLight: "#b37840",
+  bronze: "#c4915c",
+  bronzeDark: "#8b6239",
+  bronzeLight: "#d4a574",
 
-  beige: "#ead395",
-  beigeDark: "#d4b876",
-  beigeLight: "#f7edd2",
+  beige: "#f4e8d8",
+  beigeDark: "#e6d4b8",
+  beigeLight: "#fbf4eb",
 
   // Luxury Gold Accents
   gold: "#d4a574",
   goldLight: "#e8c9a0",
   goldDark: "#b8935f",
+  goldBright: "#f4c430",
 
   // Secondary Colors
-  darkRed: "#7d0a12",
-  red: "#9b0d16",
-  redLight: "#b91a23",
+  darkRed: "#8b2c2c",
+  red: "#c73e3e",
+  redLight: "#e85858",
+  redAccent: "#ff6b6b",
 
-  // Dark Theme Base
-  bgDark: "#0a0806",
-  bgPrimary: "#1a1512",
-  bgSecondary: "#1c1410",
-  bgCard: "#221a15",
-  bgCardHover: "#2d231c",
-  bgSidebar: "#140f0c",
+  // Dark Theme Base - Darker & More Professional
+  bgDark: "#0f0c0a",
+  bgPrimary: "#1a1410",
+  bgSecondary: "#201812",
+  bgCard: "linear-gradient(135deg, #2a1f18 0%, #1f1611 100%)",
+  bgCardHover: "#342821",
+  bgSidebar: "#181310",
+  bgGradient: "linear-gradient(135deg, #1a1410 0%, #2a1f18 50%, #1a1410 100%)",
 
   // Light Theme Base
   bgLight: "#ffffff",
@@ -46,8 +50,9 @@ const Colors = {
   bgLightCard: "#ffffff",
 
   // Text Colors
-  textDark: "#e8d5c4",
-  textDarkMuted: "#a89580",
+  textDark: "#f5e6d3",
+  textDarkMuted: "#b8a088",
+  textGold: "#d4a574",
   textLight: "#1a1a1c",
   textLightMuted: "#6b6c70",
 
@@ -58,13 +63,16 @@ const Colors = {
   info: "#3b82f6",
 
   // Borders & Overlays
-  borderDark: "rgba(212,165,116,0.2)",
+  borderDark: "rgba(212,165,116,0.25)",
   borderLight: "rgba(153,93,38,0.15)",
-  overlay: "rgba(10,8,6,0.85)",
+  borderGold: "rgba(212,165,116,0.4)",
+  overlay: "rgba(10,8,6,0.9)",
 
   // Shadows
-  shadowDark: "0 12px 40px rgba(0,0,0,0.5)",
+  shadowDark: "0 20px 60px rgba(0,0,0,0.7)",
+  shadowGold: "0 10px 40px rgba(212,165,116,0.2)",
   shadowLight: "0 8px 30px rgba(153,93,38,0.12)",
+  glowGold: "0 0 30px rgba(212,165,116,0.3)",
 };
 
 // ═══════════════════════════════════════════════
@@ -129,12 +137,39 @@ function ERPSystemLuxury() {
   const [language, setLanguage] = useState('ar');
   const [notifications] = useState(7);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const user = {
-    name: 'زيد العزام',
-    role: 'مدير النظام',
-    email: 'admin@eatemad.com',
-    avatar: 'ZA'
+  // Check if user is already logged in
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    const authToken = localStorage.getItem('authToken');
+    if (savedUser && authToken) {
+      setUser(JSON.parse(savedUser));
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // Handle login
+  const handleLogin = (userData) => {
+    setUser({
+      name: userData.fullName,
+      englishName: userData.englishName,
+      role: userData.title || userData.role,
+      email: userData.email,
+      avatar: userData.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2),
+      ...userData
+    });
+    setIsLoggedIn(true);
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    setUser(null);
+    setIsLoggedIn(false);
+    setActiveModule('dashboard');
   };
 
   // Toggle theme
@@ -255,6 +290,18 @@ function ERPSystemLuxury() {
   };
 
   const currentTheme = isDarkMode ? theme.dark : theme.light;
+
+  // Show login page if not logged in
+  if (!isLoggedIn) {
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        language={language}
+        setLanguage={setLanguage}
+        isDarkMode={isDarkMode}
+      />
+    );
+  }
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, currentTheme, language }}>
@@ -577,7 +624,7 @@ function ERPSystemLuxury() {
                   fontSize: '0.95rem',
                   color: currentTheme.text,
                 }}>
-                  {user.name}
+                  {language === 'ar' ? user.name : user.englishName || user.name}
                 </p>
                 <p style={{
                   margin: 0,
@@ -771,12 +818,7 @@ function ERPSystemLuxury() {
 
                 {/* Logout Button */}
                 <button
-                  onClick={() => {
-                    // Use the global logout function
-                    if (window.handleLogout) {
-                      window.handleLogout();
-                    }
-                  }}
+                  onClick={handleLogout}
                   style={{
                     width: '100%',
                     display: 'flex',
