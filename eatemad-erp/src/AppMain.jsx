@@ -1,0 +1,116 @@
+import React, { useState, useEffect } from 'react';
+import LoginPage from './components/LoginPage';
+import ERPSystemLuxury from './ERPSystemLuxury';
+import { isAuthenticated, getCurrentUser, api } from './config/supabase';
+
+function AppMain() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [language, setLanguage] = useState('ar');
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    // Check if user is already logged in
+    checkAuth();
+
+    // Load saved preferences
+    const savedLang = localStorage.getItem('language') || 'ar';
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setLanguage(savedLang);
+    setIsDarkMode(savedTheme === 'dark');
+  }, []);
+
+  const checkAuth = () => {
+    if (isAuthenticated()) {
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem('authToken');
+    if (token && token !== 'demo-token' && token !== 'mock-token') {
+      await api.signOut(token);
+    } else {
+      // Clear local storage for demo/mock users
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+    }
+    setUser(null);
+  };
+
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const handleThemeChange = (theme) => {
+    setIsDarkMode(theme);
+    localStorage.setItem('theme', theme ? 'dark' : 'light');
+  };
+
+  if (isLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: isDarkMode ? '#0a0806' : '#ffffff',
+      }}>
+        <div style={{
+          textAlign: 'center',
+          color: isDarkMode ? '#e8d5c4' : '#1a1a1c',
+        }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            border: `4px solid ${isDarkMode ? '#d4a574' : '#995d26'}`,
+            borderTopColor: 'transparent',
+            borderRadius: '50%',
+            margin: '0 auto 1rem',
+            animation: 'spin 1s linear infinite',
+          }} />
+          <p style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+            {language === 'ar' ? 'جاري التحميل...' : 'Loading...'}
+          </p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        language={language}
+        setLanguage={handleLanguageChange}
+        isDarkMode={isDarkMode}
+      />
+    );
+  }
+
+  // Pass logout function and user data to ERP system
+  // We'll modify the ERPSystemLuxury to use the logout from window
+  useEffect(() => {
+    // Make logout and user available globally
+    window.currentUser = user;
+    window.handleLogout = handleLogout;
+  }, [user]);
+
+  return <ERPSystemLuxury />;
+}
+
+export default AppMain;
