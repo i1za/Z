@@ -20,6 +20,7 @@ import {
   FiUserPlus,
 } from "react-icons/fi";
 import HRDashboard from "./components/HRDashboard";
+import EmployeesModule from "./components/EmployeesModule";
 import { MODULE_CONFIG } from "./config/moduleConfig";
 import { userHasPermission } from "./config/roleConfig";
 import { useHRData } from "./hooks/useHRData";
@@ -162,7 +163,12 @@ function ERPSystemLuxury({
     error: dataError,
     dashboardData,
     moduleData,
+    employees,
+    mutatingEmployees,
     refresh: refreshData,
+    addEmployee,
+    updateEmployee,
+    deleteEmployee,
   } = useHRData({
     language,
     user: currentUser,
@@ -177,6 +183,20 @@ function ERPSystemLuxury({
           currentUser={currentUser}
           permissions={currentUser.permissions}
           dashboardData={dashboardData}
+        />
+      );
+    }
+    if (activeModule === "employees") {
+      return (
+        <EmployeesModule
+          theme={theme}
+          language={language}
+          isCompact={isTablet}
+          employees={employees}
+          mutatingEmployees={mutatingEmployees}
+          onAddEmployee={addEmployee}
+          onUpdateEmployee={updateEmployee}
+          onDeleteEmployee={deleteEmployee}
         />
       );
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+﻿import React, { useEffect, useMemo, useState } from "react";
 import {
   FiUser,
   FiLock,
@@ -35,45 +35,45 @@ const USERS_DATABASE = {
   "zaid.alazzam": {
     username: "zaid.alazzam",
     password: "admin@2024",
-    fullName: "زيد العزام",
+    fullName: "Ø²ÙŠØ¯ Ø§Ù„Ø¹Ø²Ø§Ù…",
     englishName: "Zaid Al-Azzam",
     role: "admin",
-    title: "مدير النظام",
+    title: "Ù…Ø¯ÙŠØ± Ø§Ù„Ù†Ø¸Ø§Ù…",
     titleEn: "System Administrator",
-    department: "الإدارة العامة",
+    department: "Ø§Ù„Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø¹Ø§Ù…Ø©",
     permissions: ["*"],
     email: "zaid@eatemad.com",
   },
   "akram.qasim": {
     username: "akram.qasim",
     password: "hr@2024",
-    fullName: "أكرم قاسم",
+    fullName: "Ø£ÙƒØ±Ù… Ù‚Ø§Ø³Ù…",
     englishName: "Akram Qasim",
     role: "hr_manager",
-    title: "مدير الموارد البشرية",
+    title: "Ù…Ø¯ÙŠØ± Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ø¨Ø´Ø±ÙŠØ©",
     titleEn: "HR Manager",
-    department: "الموارد البشرية",
+    department: "Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ø¨Ø´Ø±ÙŠØ©",
     permissions: ["hr", "employees", "attendance", "leaves", "payroll", "recruitment", "performance", "reports"],
     email: "akram@eatemad.com",
   },
   "sarah.ahmad": {
     username: "sarah.ahmad",
     password: "hr@123",
-    fullName: "سارة أحمد",
+    fullName: "Ø³Ø§Ø±Ø© Ø£Ø­Ù…Ø¯",
     englishName: "Sarah Ahmad",
     role: "hr_specialist",
-    title: "أخصائي موارد بشرية",
+    title: "Ø£Ø®ØµØ§Ø¦ÙŠ Ù…ÙˆØ§Ø±Ø¯ Ø¨Ø´Ø±ÙŠØ©",
     titleEn: "HR Specialist",
-    department: "الموارد البشرية",
+    department: "Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ø¨Ø´Ø±ÙŠØ©",
     permissions: ["hr", "employees", "attendance"],
     email: "sarah@eatemad.com",
   },
 };
 
 const loginStats = [
-  { icon: FiUsers, value: "248+", labelAr: "موظف نشط", labelEn: "Active Employees" },
-  { icon: FiTrendingUp, value: "92%", labelAr: "معدل حضور", labelEn: "Attendance Rate" },
-  { icon: FiShield, value: "100%", labelAr: "تحكم بالصلاحيات", labelEn: "Role Security" },
+  { icon: FiUsers, value: "248+", labelAr: "Ù…ÙˆØ¸Ù Ù†Ø´Ø·", labelEn: "Active Employees" },
+  { icon: FiTrendingUp, value: "92%", labelAr: "Ù…Ø¹Ø¯Ù„ Ø­Ø¶ÙˆØ±", labelEn: "Attendance Rate" },
+  { icon: FiShield, value: "100%", labelAr: "ØªØ­ÙƒÙ… Ø¨Ø§Ù„ØµÙ„Ø§Ø­ÙŠØ§Øª", labelEn: "Role Security" },
 ];
 
 const t = (language, ar, en) => (language === "ar" ? ar : en);
@@ -106,7 +106,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
   }, [language]);
 
   const title = useMemo(
-    () => t(language, "نظام إدارة الموارد البشرية", "Human Resources Management System"),
+    () => t(language, "Ù†Ø¸Ø§Ù… Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ø¨Ø´Ø±ÙŠØ©", "Human Resources Management System"),
     [language]
   );
 
@@ -114,7 +114,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
     () =>
       t(
         language,
-        "سجّل الدخول لإدارة الموظفين، الحضور، الإجازات، والرواتب من لوحة واحدة.",
+        "Ø³Ø¬Ù‘Ù„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ù„Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†ØŒ Ø§Ù„Ø­Ø¶ÙˆØ±ØŒ Ø§Ù„Ø¥Ø¬Ø§Ø²Ø§ØªØŒ ÙˆØ§Ù„Ø±ÙˆØ§ØªØ¨ Ù…Ù† Ù„ÙˆØ­Ø© ÙˆØ§Ø­Ø¯Ø©.",
         "Sign in to manage employees, attendance, leaves, and payroll from one dashboard."
       ),
     [language]
@@ -127,8 +127,17 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
 
     await new Promise((resolve) => setTimeout(resolve, 700));
 
-    // First try Supabase Auth
-    const authResult = await api.signIn(username, password);
+    const loginInput = username.trim();
+    const localUser = Object.values(USERS_DATABASE).find(
+      (item) =>
+        item.username?.toLowerCase() === loginInput.toLowerCase() ||
+        item.email?.toLowerCase() === loginInput.toLowerCase()
+    );
+
+    const authIdentifier =
+      loginInput.includes("@") ? loginInput : localUser?.email || loginInput;
+
+    const authResult = await api.signIn(authIdentifier, password);
     let userData;
 
     if (authResult.success) {
@@ -136,8 +145,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
       let fullName = username;
       let titleEn = "User";
       let department = "";
-      
-      // Try to get profile
+
       const profileRes = await api.getProfile(dbUser.id, authResult.data.access_token);
       if (profileRes.success && profileRes.data) {
         fullName = profileRes.data.full_name || profileRes.data.name || dbUser.email;
@@ -147,25 +155,27 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
 
       userData = {
         id: dbUser.id,
-        username: username,
-        fullName: fullName,
+        username: loginInput,
+        fullName,
         englishName: fullName,
         role: titleEn.toLowerCase().includes("admin") ? "admin" : "hr_manager",
         title: titleEn,
-        department: department,
-        permissions: titleEn.toLowerCase().includes("admin") ? ["*"] : ["hr", "employees", "attendance", "leaves", "payroll", "reports"],
+        department,
+        permissions: titleEn.toLowerCase().includes("admin")
+          ? ["*"]
+          : ["hr", "employees", "attendance", "leaves", "payroll", "reports"],
         email: dbUser.email,
         loginTime: new Date().toISOString(),
       };
-      
+
       localStorage.setItem("authToken", authResult.data.access_token);
     } else {
-      // Fallback to local USERS_DATABASE if Supabase auth fails (e.g. no connection or user not in DB)
-      const localUser = USERS_DATABASE[username];
       if (!localUser || localUser.password !== password) {
-        setError(
-          t(language, "اسم المستخدم أو كلمة المرور غير صحيحة", "Invalid username or password")
-        );
+        const errorMessage = authResult?.error?.includes("Supabase is not configured")
+          ? t(language, "إعدادات Supabase غير مكتملة", "Supabase configuration is missing")
+          : t(language, "اسم المستخدم أو كلمة المرور غير صحيحة", "Invalid username or password");
+
+        setError(errorMessage);
         setIsLoading(false);
         return;
       }
@@ -174,14 +184,14 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
         Array.isArray(localUser.permissions) && localUser.permissions.length > 0
           ? localUser.permissions
           : getRolePermissions(localUser.role);
-          
+
       const resolvedTitle =
         language === "ar"
           ? localUser.title || getRoleTitle(localUser.role, "ar")
           : localUser.titleEn || getRoleTitle(localUser.role, "en");
 
       userData = {
-        id: username,
+        id: localUser.username,
         username: localUser.username,
         fullName: localUser.fullName,
         englishName: localUser.englishName,
@@ -192,11 +202,11 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
         email: localUser.email,
         loginTime: new Date().toISOString(),
       };
-      
-      localStorage.setItem("authToken", `token-${username}`);
+
+      localStorage.setItem("authToken", `local-${localUser.username}`);
     }
 
-    if (rememberMe) localStorage.setItem("rememberedUsername", username);
+    if (rememberMe) localStorage.setItem("rememberedUsername", loginInput);
     else localStorage.removeItem("rememberedUsername");
 
     localStorage.setItem("user", JSON.stringify(userData));
@@ -240,7 +250,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
         }}
       >
         <FiGlobe size={16} />
-        {language === "ar" ? "English" : "عربي"}
+        {language === "ar" ? "English" : "Ø¹Ø±Ø¨ÙŠ"}
       </button>
 
       {!isTablet && (
@@ -288,7 +298,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
                 AL EATEMAD
               </h2>
               <p style={{ margin: 0, color: Colors.textMuted, fontSize: "0.85rem" }}>
-                {t(language, "حلول موارد بشرية متكاملة", "Integrated HR Solutions")}
+                {t(language, "Ø­Ù„ÙˆÙ„ Ù…ÙˆØ§Ø±Ø¯ Ø¨Ø´Ø±ÙŠØ© Ù…ØªÙƒØ§Ù…Ù„Ø©", "Integrated HR Solutions")}
               </p>
             </div>
           </div>
@@ -355,10 +365,10 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
           />
           <div>
             <h3 style={{ margin: 0, color: Colors.textDark, fontSize: isMobile ? "1.05rem" : "1.2rem", fontWeight: 800 }}>
-              {t(language, "تسجيل الدخول", "Sign In")}
+              {t(language, "ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„", "Sign In")}
             </h3>
             <p style={{ margin: 0, color: Colors.textMuted, fontSize: "0.8rem" }}>
-              {t(language, "ادخل بيانات الحساب", "Enter your credentials")}
+              {t(language, "Ø§Ø¯Ø®Ù„ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø­Ø³Ø§Ø¨", "Enter your credentials")}
             </p>
           </div>
         </div>
@@ -381,7 +391,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: "0.8rem" }}>
           <label style={{ color: Colors.gold, fontSize: "0.85rem", fontWeight: 600 }}>
-            {t(language, "اسم المستخدم", "Username")}
+            {t(language, "Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…", "Username")}
           </label>
           <div style={{ position: "relative" }}>
             <FiUser
@@ -396,7 +406,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder={t(language, "مثال: akram.qasim", "e.g. akram.qasim")}
+              placeholder={t(language, "Ù…Ø«Ø§Ù„: akram.qasim", "e.g. akram.qasim")}
               required
               disabled={isLoading}
               style={{
@@ -413,7 +423,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
           </div>
 
           <label style={{ color: Colors.gold, fontSize: "0.85rem", fontWeight: 600 }}>
-            {t(language, "كلمة المرور", "Password")}
+            {t(language, "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±", "Password")}
           </label>
           <div style={{ position: "relative" }}>
             <FiLock
@@ -429,7 +439,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t(language, "أدخل كلمة المرور", "Enter password")}
+              placeholder={t(language, "Ø£Ø¯Ø®Ù„ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±", "Enter password")}
               required
               disabled={isLoading}
               style={{
@@ -468,7 +478,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
               onChange={(e) => setRememberMe(e.target.checked)}
               style={{ accentColor: Colors.gold }}
             />
-            {t(language, "تذكرني", "Remember me")}
+            {t(language, "ØªØ°ÙƒØ±Ù†ÙŠ", "Remember me")}
           </label>
 
           <button
@@ -492,7 +502,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
             }}
           >
             {isLoading && <FiCheckCircle size={16} style={{ animation: "pulse 1s ease infinite" }} />}
-            {isLoading ? t(language, "جاري تسجيل الدخول...", "Signing in...") : t(language, "دخول", "Sign In")}
+            {isLoading ? t(language, "Ø¬Ø§Ø±ÙŠ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„...", "Signing in...") : t(language, "Ø¯Ø®ÙˆÙ„", "Sign In")}
           </button>
         </form>
 
@@ -506,7 +516,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
           }}
         >
           <p style={{ margin: "0 0 0.45rem", color: Colors.goldLight, fontSize: "0.8rem", fontWeight: 700 }}>
-            {t(language, "حسابات تجريبية", "Demo Accounts")}
+            {t(language, "Ø­Ø³Ø§Ø¨Ø§Øª ØªØ¬Ø±ÙŠØ¨ÙŠØ©", "Demo Accounts")}
           </p>
           <div style={{ display: "grid", gap: "0.35rem", fontSize: "0.78rem", color: Colors.textMuted }}>
             <div>zaid.alazzam / admin@2024</div>
@@ -527,3 +537,4 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
 }
 
 export default LoginPage;
+

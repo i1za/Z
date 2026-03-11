@@ -1,9 +1,13 @@
-// ═══════════════════════════════════════════════════════════
-// SUPABASE CONFIGURATION
-// ═══════════════════════════════════════════════════════════
+﻿const DEFAULT_SUPABASE_URL = "https://rgbzximweiafgdukppbf.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnYnp4aW13ZWlhZmdkdWtwcGJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNDU5MDcsImV4cCI6MjA4ODYyMTkwN30.fMGcuP-E2mxG_LHCq4TLaI8087pi17oIMoQuNlNspUs";
 
-export const supabaseUrl = "https://fmajfprdlczvfudhwbcj.supabase.co";
-export const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYWpmcHJkbGN6dmZ1ZGh3YmNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTk2NDQsImV4cCI6MjA4ODEzNTY0NH0.EjCDKzsZvbT31mbaBhoW4DfZtVj0rNc1U3w_goSouaU";
+const envUrl = String(import.meta.env?.VITE_SUPABASE_URL || "").trim();
+const envAnonKey = String(import.meta.env?.VITE_SUPABASE_ANON_KEY || "").trim();
+const hasCustomConfig = Boolean(envUrl || envAnonKey);
+
+export const supabaseUrl = envUrl || DEFAULT_SUPABASE_URL;
+export const supabaseAnonKey = envAnonKey || (hasCustomConfig ? "" : DEFAULT_SUPABASE_ANON_KEY);
 
 const isUsableJwt = (token) =>
   typeof token === "string" &&
@@ -12,172 +16,232 @@ const isUsableJwt = (token) =>
   token !== "demo-token" &&
   token !== "mock-token";
 
-// API Helper Functions
-const headers = (token) => ({
-  "apikey": supabaseAnonKey,
-  "Content-Type": "application/json",
-  ...(isUsableJwt(token) && { "Authorization": `Bearer ${token}` }),
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+const makeHeaders = (token, includeJson = true) => ({
+  apikey: supabaseAnonKey,
+  ...(includeJson ? { "Content-Type": "application/json" } : {}),
+  ...(isUsableJwt(token) ? { Authorization: `Bearer ${token}` } : {}),
 });
 
+async function parseResponsePayload(response) {
+  const text = await response.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+function formatErrorMessage(payload, fallback = "Request failed") {
+  if (!payload) return fallback;
+  if (typeof payload === "string") return payload;
+  return payload.message || payload.error_description || payload.error || fallback;
+}
+
+async function request(path, { method = "GET", token, body, prefer, includeJson = true } = {}) {
+  if (!isSupabaseConfigured) {
+    return {
+      success: false,
+      status: 0,
+      data: null,
+      error: "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.",
+    };
+  }
+
+  try {
+    const headers = makeHeaders(token, includeJson);
+    if (prefer) headers.Prefer = prefer;
+
+    const response = await fetch(`${supabaseUrl}${path}`, {
+      method,
+      headers,
+      ...(body !== undefined ? { body: includeJson ? JSON.stringify(body) : body } : {}),
+    });
+
+    const payload = await parseResponsePayload(response);
+    if (!response.ok) {
+      return {
+        success: false,
+        status: response.status,
+        data: null,
+        error: formatErrorMessage(payload, "Supabase request failed"),
+      };
+    }
+
+    return {
+      success: true,
+      status: response.status,
+      data: payload,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      status: 0,
+      data: null,
+      error: error.message || "Network error",
+    };
+  }
+}
+
+function buildSelectQuery({ select = "*", orderBy, limit, filters } = {}) {
+  const params = new URLSearchParams();
+  params.set("select", select);
+  if (orderBy) params.set("order", orderBy);
+  if (typeof limit === "number") params.set("limit", String(limit));
+
+  if (filters && typeof filters === "string") {
+    const filterText = filters.replace(/^\?/, "");
+    if (filterText) return `${params.toString()}&${filterText}`;
+  }
+
+  return params.toString();
+}
+
 export const api = {
-  async getTableRows(table, token, options = {}) {
-    try {
-      const {
-        select = "*",
-        orderBy = "created_at.desc",
-        limit,
-        filters = "",
-      } = options;
-
-      const params = new URLSearchParams();
-      params.set("select", select);
-      if (orderBy) params.set("order", orderBy);
-      if (typeof limit === "number") params.set("limit", String(limit));
-
-      const query = filters
-        ? `${params.toString()}&${filters.replace(/^\?/, "")}`
-        : params.toString();
-      const response = await fetch(`${supabaseUrl}/rest/v1/${table}?${query}`, {
-        headers: headers(token),
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { success: false, error: data?.message || "Unable to load data", data: [] };
-      }
-      return { success: true, data: Array.isArray(data) ? data : [] };
-    } catch (error) {
-      return { success: false, error: error.message, data: [] };
-    }
-  },
-
-  // Authentication
   async signIn(email, password) {
-    try {
-      const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
-        method: "POST",
-        headers: headers(),
-        body: JSON.stringify({ email, password })
-      });
-      const data = await response.json();
+    const result = await request(`/auth/v1/token?grant_type=password`, {
+      method: "POST",
+      body: { email, password },
+    });
 
-      if (data.access_token) {
-        localStorage.setItem('authToken', data.access_token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        return { success: true, data };
-      }
-      return { success: false, error: data.error || 'Login failed' };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!result.success) {
+      return { success: false, error: result.error };
     }
-  },
 
-  async signUp(email, password, fullName) {
-    try {
-      const response = await fetch(`${supabaseUrl}/auth/v1/signup`, {
-        method: "POST",
-        headers: headers(),
-        body: JSON.stringify({
-          email,
-          password,
-          data: { full_name: fullName }
-        })
-      });
-      const data = await response.json();
-      return { success: !!data.id, data };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!result.data?.access_token) {
+      return { success: false, error: "Missing access token from Supabase" };
     }
+
+    localStorage.setItem("authToken", result.data.access_token);
+    return { success: true, data: result.data };
   },
 
   async signOut(token) {
-    try {
-      await fetch(`${supabaseUrl}/auth/v1/logout`, {
-        method: "POST",
-        headers: headers(token)
-      });
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
+    await request(`/auth/v1/logout`, { method: "POST", token });
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    return { success: true };
   },
 
-  async resetPassword(email) {
-    try {
-      const response = await fetch(`${supabaseUrl}/auth/v1/recover`, {
-        method: "POST",
-        headers: headers(),
-        body: JSON.stringify({ email })
-      });
-      return { success: response.ok };
-    } catch (error) {
-      return { success: false, error: error.message };
+  async getSessionUser(token) {
+    const result = await request(`/auth/v1/user`, { token });
+    if (!result.success) {
+      return { success: false, error: result.error, data: null };
     }
+    return { success: true, data: result.data };
   },
 
-  // User Profile
   async getProfile(userId, token) {
-    try {
-      const response = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`, {
-        headers: headers(token)
-      });
-      const data = await response.json();
-      return { success: true, data: data[0] || null };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!userId) return { success: false, error: "Missing user id", data: null };
+
+    const query = new URLSearchParams({ select: "*", id: `eq.${userId}` }).toString();
+    const result = await request(`/rest/v1/profiles?${query}`, { token });
+
+    if (!result.success) {
+      return { success: false, error: result.error, data: null };
     }
+
+    return {
+      success: true,
+      data: Array.isArray(result.data) ? result.data[0] || null : result.data,
+    };
   },
 
-  // Employees
+  async getTableRows(table, token, options = {}) {
+    const query = buildSelectQuery(options);
+    const result = await request(`/rest/v1/${table}?${query}`, { token });
+
+    if (!result.success) {
+      return { success: false, error: result.error, data: [] };
+    }
+
+    return {
+      success: true,
+      data: Array.isArray(result.data) ? result.data : [],
+    };
+  },
+
   async getEmployees(token) {
-    return this.getTableRows("employees", token, { orderBy: "created_at.desc" });
+    return this.getTableRows("employees", token, {
+      orderBy: "created_at.desc",
+    });
   },
 
   async createEmployee(employeeData, token) {
-    try {
-      const response = await fetch(`${supabaseUrl}/rest/v1/employees`, {
-        method: "POST",
-        headers: headers(token),
-        body: JSON.stringify(employeeData)
-      });
-      const data = await response.json();
-      return { success: response.ok, data };
-    } catch (error) {
-      return { success: false, error: error.message };
+    const result = await request(`/rest/v1/employees`, {
+      method: "POST",
+      token,
+      body: employeeData,
+      prefer: "return=representation",
+    });
+
+    if (!result.success) {
+      return { success: false, error: result.error, data: null };
     }
+
+    return {
+      success: true,
+      data: Array.isArray(result.data) ? result.data[0] || null : result.data,
+    };
   },
 
   async updateEmployee(id, updates, token) {
-    try {
-      const response = await fetch(`${supabaseUrl}/rest/v1/employees?id=eq.${id}`, {
-        method: "PATCH",
-        headers: headers(token),
-        body: JSON.stringify(updates)
-      });
-      return { success: response.ok };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!id) return { success: false, error: "Missing employee id" };
+
+    const filter = encodeURIComponent(String(id));
+    const result = await request(`/rest/v1/employees?id=eq.${filter}&select=*`, {
+      method: "PATCH",
+      token,
+      body: updates,
+      prefer: "return=representation",
+    });
+
+    if (!result.success) {
+      return { success: false, error: result.error, data: null };
     }
+
+    return {
+      success: true,
+      data: Array.isArray(result.data) ? result.data[0] || null : result.data,
+    };
   },
 
-  // Dashboard Stats
+  async deleteEmployee(id, token) {
+    if (!id) return { success: false, error: "Missing employee id" };
+
+    const filter = encodeURIComponent(String(id));
+    const result = await request(`/rest/v1/employees?id=eq.${filter}`, {
+      method: "DELETE",
+      token,
+      prefer: "return=representation",
+    });
+
+    if (!result.success) {
+      return { success: false, error: result.error };
+    }
+
+    return { success: true };
+  },
+
   async getDashboardStats(token) {
     try {
-      // Mock data for now - replace with actual API calls
+      const employeesRes = await this.getEmployees(token);
+      const totalEmployees = employeesRes.success ? employeesRes.data.length : 0;
+
       return {
         success: true,
         data: {
-          totalRevenue: 3456789,
-          revenueChange: 15.3,
-          activeEmployees: 248,
-          employeesChange: 5,
-          todaySales: 67890,
-          salesChange: 8.7,
-          activeProjects: 12,
-          projectsChange: -2
-        }
+          activeEmployees: totalEmployees,
+          totalRevenue: 0,
+          revenueChange: 0,
+          todaySales: 0,
+          salesChange: 0,
+          activeProjects: 0,
+          projectsChange: 0,
+        },
       };
     } catch (error) {
       return { success: false, error: error.message };
@@ -185,39 +249,56 @@ export const api = {
   },
 
   async getAttendanceRecords(token) {
-    return this.getTableRows("attendance", token, { orderBy: "date.desc,time_in.desc", limit: 50 });
+    return this.getTableRows("attendance", token, {
+      orderBy: "date.desc,time_in.desc",
+      limit: 50,
+    });
   },
 
   async getLeaveRequests(token) {
-    return this.getTableRows("leave_requests", token, { orderBy: "created_at.desc", limit: 50 });
+    return this.getTableRows("leave_requests", token, {
+      orderBy: "created_at.desc",
+      limit: 50,
+    });
   },
 
   async getPayrollRecords(token) {
-    return this.getTableRows("payroll", token, { orderBy: "period.desc,created_at.desc", limit: 50 });
+    return this.getTableRows("payroll", token, {
+      orderBy: "period.desc,created_at.desc",
+      limit: 50,
+    });
   },
 
   async getRecruitmentRecords(token) {
-    return this.getTableRows("recruitment", token, { orderBy: "created_at.desc", limit: 50 });
+    return this.getTableRows("recruitment", token, {
+      orderBy: "created_at.desc",
+      limit: 50,
+    });
   },
 
   async getPerformanceRecords(token) {
-    return this.getTableRows("performance_reviews", token, { orderBy: "review_date.desc,created_at.desc", limit: 50 });
+    return this.getTableRows("performance_reviews", token, {
+      orderBy: "review_date.desc,created_at.desc",
+      limit: 50,
+    });
+  },
+};
+
+export const isAuthenticated = () => {
+  const token = localStorage.getItem("authToken");
+  return Boolean(token);
+};
+
+export const getCurrentUser = () => {
+  const userStr = localStorage.getItem("user");
+  if (!userStr) return null;
+
+  try {
+    return JSON.parse(userStr);
+  } catch {
+    return null;
   }
 };
 
-// Check if user is authenticated
-export const isAuthenticated = () => {
-  const token = localStorage.getItem('authToken');
-  return !!token;
-};
+export const getAuthToken = () => localStorage.getItem("authToken");
 
-// Get current user
-export const getCurrentUser = () => {
-  const userStr = localStorage.getItem('user');
-  return userStr ? JSON.parse(userStr) : null;
-};
-
-// Get auth token
-export const getAuthToken = () => {
-  return localStorage.getItem('authToken');
-};
