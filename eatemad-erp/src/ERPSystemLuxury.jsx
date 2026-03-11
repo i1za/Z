@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+﻿import React, { useState, useEffect, createContext, useContext } from 'react';
 import {
   FiSun, FiMoon, FiHome, FiUsers, FiShoppingCart, FiBarChart2,
   FiSettings, FiBox, FiTruck, FiDollarSign, FiFileText, FiCalendar,
@@ -8,9 +8,9 @@ import {
 } from 'react-icons/fi';
 import HRDashboard from './components/HRDashboard';
 
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Brand Colors - Eatemad Official Palette
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const Colors = {
   // Primary Brand Colors - Bronze & Gold
   bronze: "#995d26",
@@ -67,9 +67,9 @@ const Colors = {
   shadowLight: "0 8px 30px rgba(153,93,38,0.12)",
 };
 
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Decorative Wheat/Leaf Element
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function WheatDecor({ size = 100, opacity = 0.15, flip = false, style = {} }) {
   return (
     <svg
@@ -112,15 +112,15 @@ function WheatDecor({ size = 100, opacity = 0.15, flip = false, style = {} }) {
   );
 }
 
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Theme Context
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Main ERP System Component
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function ERPSystemLuxury() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeModule, setActiveModule] = useState('dashboard');
@@ -131,10 +131,10 @@ function ERPSystemLuxury() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const user = {
-    name: 'محمد الأحمد',
-    role: 'مدير النظام',
+    name: 'Ø²ÙŠØ¯ Ø§Ù„Ø¹Ø²Ø§Ù…',
+    role: 'Ù…Ø¯ÙŠØ± Ø§Ù„Ù†Ø¸Ø§Ù…',
     email: 'admin@eatemad.com',
-    avatar: 'MA'
+    avatar: 'ZA'
   };
 
   // Toggle theme
@@ -165,54 +165,54 @@ function ERPSystemLuxury() {
     document.body.style.background = isDarkMode ? Colors.bgDark : Colors.bgLight;
   }, [isDarkMode, language]);
 
-  // Modules configuration with gradients
+  // Modules configuration - HR-Only System
   const modules = [
     {
       id: 'dashboard',
-      label: 'لوحة التحكم',
+      label: 'Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ…',
       labelEn: 'Dashboard',
       icon: FiGrid,
       gradient: `linear-gradient(135deg, ${Colors.gold}, ${Colors.goldDark})`
     },
     {
-      id: 'hr',
-      label: 'الموارد البشرية',
-      labelEn: 'HR',
+      id: 'employees',
+      label: 'Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†',
+      labelEn: 'Employees',
       icon: FiUsers,
       gradient: `linear-gradient(135deg, ${Colors.darkRed}, ${Colors.red})`
     },
     {
-      id: 'accounting',
-      label: 'المحاسبة',
-      labelEn: 'Accounting',
-      icon: FiDollarSign,
+      id: 'attendance',
+      label: 'Ø§Ù„Ø­Ø¶ÙˆØ± ÙˆØ§Ù„Ø§Ù†ØµØ±Ø§Ù',
+      labelEn: 'Attendance',
+      icon: FiCheckCircle,
       gradient: `linear-gradient(135deg, #22c55e, #16a34a)`
     },
     {
-      id: 'inventory',
-      label: 'المخزون',
-      labelEn: 'Inventory',
-      icon: FiBox,
+      id: 'leaves',
+      label: 'Ø§Ù„Ø¥Ø¬Ø§Ø²Ø§Øª',
+      labelEn: 'Leaves',
+      icon: FiCalendar,
       gradient: `linear-gradient(135deg, #3b82f6, #2563eb)`
     },
     {
-      id: 'sales',
-      label: 'المبيعات',
-      labelEn: 'Sales',
-      icon: FiShoppingCart,
+      id: 'payroll',
+      label: 'Ø§Ù„Ø±ÙˆØ§ØªØ¨',
+      labelEn: 'Payroll',
+      icon: FiCreditCard,
       gradient: `linear-gradient(135deg, #f59e0b, #d97706)`
     },
     {
-      id: 'purchases',
-      label: 'المشتريات',
-      labelEn: 'Purchases',
-      icon: FiTruck,
+      id: 'recruitment',
+      label: 'Ø§Ù„ØªÙˆØ¸ÙŠÙ',
+      labelEn: 'Recruitment',
+      icon: FiActivity,
       gradient: `linear-gradient(135deg, #8b5cf6, #7c3aed)`
     },
     {
-      id: 'reports',
-      label: 'التقارير',
-      labelEn: 'Reports',
+      id: 'performance',
+      label: 'ØªÙ‚ÙŠÙŠÙ… Ø§Ù„Ø£Ø¯Ø§Ø¡',
+      labelEn: 'Performance',
       icon: FiBarChart2,
       gradient: `linear-gradient(135deg, #ef4444, #dc2626)`
     },
@@ -338,7 +338,7 @@ function ERPSystemLuxury() {
                 }}
                 onError={(e) => {
                   e.target.style.display = 'none';
-                  e.target.parentElement.innerHTML = '<span style="font-size: 28px;">🥩</span>';
+                  e.target.parentElement.innerHTML = '<span style="font-size: 28px;">ðŸ¥©</span>';
                 }}
               />
             </div>
@@ -354,7 +354,7 @@ function ERPSystemLuxury() {
                 margin: 0,
                 letterSpacing: language === 'ar' ? '0.5px' : '-0.5px',
               }}>
-                {language === 'ar' ? 'نظام الاعتماد المتكامل' : 'Al Eatemad ERP'}
+                {language === 'ar' ? 'Ù†Ø¸Ø§Ù… Ø§Ù„Ø§Ø¹ØªÙ…Ø§Ø¯ Ø§Ù„Ù…ØªÙƒØ§Ù…Ù„' : 'Al Eatemad ERP'}
               </h1>
               <p style={{
                 fontSize: '0.85rem',
@@ -362,7 +362,7 @@ function ERPSystemLuxury() {
                 margin: 0,
                 fontWeight: 500,
               }}>
-                {language === 'ar' ? 'إدارة الموارد المؤسسية' : 'Enterprise Resource Planning'}
+                {language === 'ar' ? 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ù…Ø¤Ø³Ø³ÙŠØ©' : 'Enterprise Resource Planning'}
               </p>
             </div>
           </div>
@@ -394,7 +394,7 @@ function ERPSystemLuxury() {
               <FiSearch style={{ color: currentTheme.accent, minWidth: '18px' }} size={18} />
               <input
                 type="text"
-                placeholder={language === 'ar' ? 'البحث في النظام...' : 'Search system...'}
+                placeholder={language === 'ar' ? 'Ø§Ù„Ø¨Ø­Ø« ÙÙŠ Ø§Ù„Ù†Ø¸Ø§Ù…...' : 'Search system...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -497,7 +497,7 @@ function ERPSystemLuxury() {
                 e.target.style.boxShadow = `0 4px 15px ${currentTheme.accent}30`;
               }}
             >
-              {language === 'ar' ? 'EN' : 'عربي'}
+              {language === 'ar' ? 'EN' : 'Ø¹Ø±Ø¨ÙŠ'}
             </button>
 
             {/* Theme Toggle with Animation */}
@@ -765,7 +765,7 @@ function ERPSystemLuxury() {
                 >
                   <FiSettings size={20} />
                   <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>
-                    {language === 'ar' ? 'الإعدادات' : 'Settings'}
+                    {language === 'ar' ? 'Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª' : 'Settings'}
                   </span>
                 </button>
 
@@ -803,7 +803,7 @@ function ERPSystemLuxury() {
                   }}
                 >
                   <FiLogOut size={18} />
-                  <span>{language === 'ar' ? 'تسجيل الخروج' : 'Logout'}</span>
+                  <span>{language === 'ar' ? 'ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬' : 'Logout'}</span>
                 </button>
               </div>
             )}
@@ -819,16 +819,24 @@ function ERPSystemLuxury() {
             {activeModule === 'dashboard' && (
               <DashboardModule theme={currentTheme} language={language} isDarkMode={isDarkMode} />
             )}
-            {activeModule === 'hr' && (
+            {activeModule === 'employees' && (
               <HRDashboard theme={currentTheme} language={language} isDarkMode={isDarkMode} />
             )}
-            {activeModule === 'accounting' && (
-              <AccountingModule theme={currentTheme} language={language} isDarkMode={isDarkMode} />
+            {activeModule === 'attendance' && (
+              <HRSubModule module="attendance" theme={currentTheme} language={language} isDarkMode={isDarkMode} />
             )}
-            {activeModule === 'inventory' && (
-              <InventoryModule theme={currentTheme} language={language} isDarkMode={isDarkMode} />
+            {activeModule === 'leaves' && (
+              <HRSubModule module="leaves" theme={currentTheme} language={language} isDarkMode={isDarkMode} />
             )}
-            {/* Add other modules as needed */}
+            {activeModule === 'payroll' && (
+              <HRSubModule module="payroll" theme={currentTheme} language={language} isDarkMode={isDarkMode} />
+            )}
+            {activeModule === 'recruitment' && (
+              <HRSubModule module="recruitment" theme={currentTheme} language={language} isDarkMode={isDarkMode} />
+            )}
+            {activeModule === 'performance' && (
+              <HRSubModule module="performance" theme={currentTheme} language={language} isDarkMode={isDarkMode} />
+            )}
           </main>
         </div>
       </div>
@@ -877,43 +885,43 @@ function ERPSystemLuxury() {
   );
 }
 
-// ═══════════════════════════════════════════════
-// Dashboard Module Component
-// ═══════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// Dashboard Module - HR Focused
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function DashboardModule({ theme, language, isDarkMode }) {
   const stats = [
     {
-      label: language === 'ar' ? 'إجمالي الإيرادات' : 'Total Revenue',
-      value: '3,456,789',
-      unit: language === 'ar' ? 'ر.س' : 'SAR',
-      change: '+15.3%',
-      icon: FiDollarSign,
-      gradient: `linear-gradient(135deg, #22c55e, #16a34a)`,
-      trending: 'up'
-    },
-    {
-      label: language === 'ar' ? 'الموظفين النشطين' : 'Active Employees',
+      label: language === 'ar' ? 'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†' : 'Total Employees',
       value: '248',
-      unit: language === 'ar' ? 'موظف' : 'Employee',
+      unit: language === 'ar' ? 'Ù…ÙˆØ¸Ù' : 'Staff',
       change: '+5%',
       icon: FiUsers,
       gradient: `linear-gradient(135deg, #3b82f6, #2563eb)`,
       trending: 'up'
     },
     {
-      label: language === 'ar' ? 'المبيعات اليوم' : 'Today Sales',
-      value: '67,890',
-      unit: language === 'ar' ? 'ر.س' : 'SAR',
-      change: '+8.7%',
-      icon: FiShoppingCart,
+      label: language === 'ar' ? 'Ø§Ù„Ø­Ø¶ÙˆØ± Ø§Ù„ÙŠÙˆÙ…' : 'Present Today',
+      value: '215',
+      unit: language === 'ar' ? 'Ø­Ø§Ø¶Ø±' : 'Present',
+      change: '86.7%',
+      icon: FiCheckCircle,
+      gradient: `linear-gradient(135deg, #22c55e, #16a34a)`,
+      trending: 'up'
+    },
+    {
+      label: language === 'ar' ? 'Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø¥Ø¬Ø§Ø²Ø©' : 'Leave Requests',
+      value: '12',
+      unit: language === 'ar' ? 'Ø·Ù„Ø¨' : 'Request',
+      change: '5 pending',
+      icon: FiCalendar,
       gradient: `linear-gradient(135deg, #f59e0b, #d97706)`,
       trending: 'up'
     },
     {
-      label: language === 'ar' ? 'المشاريع الجارية' : 'Active Projects',
-      value: '12',
-      unit: language === 'ar' ? 'مشروع' : 'Project',
-      change: '-2%',
+      label: language === 'ar' ? 'ÙˆØ¸Ø§Ø¦Ù Ø´Ø§ØºØ±Ø©' : 'Open Positions',
+      value: '8',
+      unit: language === 'ar' ? 'ÙˆØ¸ÙŠÙØ©' : 'Position',
+      change: '3 urgent',
       icon: FiActivity,
       gradient: `linear-gradient(135deg, #8b5cf6, #7c3aed)`,
       trending: 'down'
@@ -933,12 +941,12 @@ function DashboardModule({ theme, language, isDarkMode }) {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>
-          {language === 'ar' ? 'لوحة التحكم الرئيسية' : 'Main Dashboard'}
+          {language === 'ar' ? 'Ù„ÙˆØ­Ø© ØªØ­ÙƒÙ… Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ø¨Ø´Ø±ÙŠØ©' : 'HR Dashboard'}
         </h2>
         <p style={{ color: theme.textMuted, fontSize: '1rem' }}>
           {language === 'ar' ?
-            `مرحباً بك مرة أخرى! إليك نظرة عامة على أداء شركتك اليوم` :
-            `Welcome back! Here's an overview of your company's performance today`
+            `Ù…Ø±Ø­Ø¨Ø§Ù‹ Ø¨ÙƒØŒ Ø²ÙŠØ¯ Ø§Ù„Ø¹Ø²Ø§Ù…! Ø¥Ù„ÙŠÙƒ Ù†Ø¸Ø±Ø© Ø¹Ø§Ù…Ø© Ø¹Ù„Ù‰ Ù‚Ø³Ù… Ø§Ù„Ù…ÙˆØ§Ø±Ø¯ Ø§Ù„Ø¨Ø´Ø±ÙŠØ© Ø§Ù„ÙŠÙˆÙ…` :
+            `Welcome, Zaid Al-Azzam! Here's your HR department overview for today`
           }
         </p>
       </div>
@@ -977,7 +985,6 @@ function DashboardModule({ theme, language, isDarkMode }) {
                 e.currentTarget.style.boxShadow = theme.shadow;
               }}
             >
-              {/* Background Pattern */}
               <div style={{
                 position: 'absolute',
                 top: -50,
@@ -1045,7 +1052,7 @@ function DashboardModule({ theme, language, isDarkMode }) {
                       color: theme.textMuted,
                       fontSize: '0.85rem',
                     }}>
-                      {language === 'ar' ? 'من الشهر الماضي' : 'from last month'}
+                      {language === 'ar' ? 'Ù…Ù† Ø§Ù„Ø´Ù‡Ø± Ø§Ù„Ù…Ø§Ø¶ÙŠ' : 'from last month'}
                     </span>
                   </div>
                 </div>
@@ -1068,69 +1075,12 @@ function DashboardModule({ theme, language, isDarkMode }) {
         })}
       </div>
 
-      {/* Charts and Activities Section */}
+      {/* Recent Activities */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1.5fr 1fr',
         gap: '1.75rem',
       }}>
-        {/* Performance Chart */}
-        <div style={{
-          background: theme.card,
-          borderRadius: '20px',
-          padding: '2rem',
-          border: `1px solid ${theme.border}`,
-          boxShadow: theme.shadow,
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '2rem',
-          }}>
-            <h3 style={{
-              fontSize: '1.3rem',
-              fontWeight: 700,
-              color: theme.text,
-            }}>
-              {language === 'ar' ? 'أداء المبيعات' : 'Sales Performance'}
-            </h3>
-            <select style={{
-              background: theme.surface,
-              border: `1px solid ${theme.border}`,
-              borderRadius: '8px',
-              padding: '0.5rem 1rem',
-              color: theme.text,
-              fontSize: '0.9rem',
-              cursor: 'pointer',
-              outline: 'none',
-            }}>
-              <option>{language === 'ar' ? 'هذا الشهر' : 'This Month'}</option>
-              <option>{language === 'ar' ? 'آخر 3 شهور' : 'Last 3 Months'}</option>
-              <option>{language === 'ar' ? 'هذه السنة' : 'This Year'}</option>
-            </select>
-          </div>
-
-          {/* Chart Placeholder */}
-          <div style={{
-            height: '300px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: theme.surface,
-            borderRadius: '12px',
-            border: `1px solid ${theme.border}`,
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <FiBarChart2 size={48} style={{ color: theme.accent, marginBottom: '1rem' }} />
-              <p style={{ color: theme.textMuted }}>
-                {language === 'ar' ? 'مخطط الأداء' : 'Performance Chart'}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Activities */}
         <div style={{
           background: theme.card,
           borderRadius: '20px',
@@ -1144,33 +1094,33 @@ function DashboardModule({ theme, language, isDarkMode }) {
             marginBottom: '1.5rem',
             color: theme.text,
           }}>
-            {language === 'ar' ? 'الأنشطة الأخيرة' : 'Recent Activities'}
+            {language === 'ar' ? 'Ø§Ù„Ø£Ù†Ø´Ø·Ø© Ø§Ù„Ø£Ø®ÙŠØ±Ø©' : 'Recent Activities'}
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
               {
-                title: language === 'ar' ? 'طلب شراء جديد' : 'New Purchase Order',
-                time: language === 'ar' ? 'منذ 5 دقائق' : '5 minutes ago',
-                icon: FiShoppingCart,
+                title: language === 'ar' ? 'ØªÙ… ØªØ¹ÙŠÙŠÙ† Ù…ÙˆØ¸Ù Ø¬Ø¯ÙŠØ¯' : 'New Employee Hired',
+                time: language === 'ar' ? 'Ù…Ù†Ø° 5 Ø¯Ù‚Ø§Ø¦Ù‚' : '5 minutes ago',
+                icon: FiUsers,
                 color: Colors.success,
               },
               {
-                title: language === 'ar' ? 'تحديث المخزون' : 'Inventory Updated',
-                time: language === 'ar' ? 'منذ 15 دقيقة' : '15 minutes ago',
-                icon: FiBox,
+                title: language === 'ar' ? 'Ø·Ù„Ø¨ Ø¥Ø¬Ø§Ø²Ø© Ø¬Ø¯ÙŠØ¯' : 'New Leave Request',
+                time: language === 'ar' ? 'Ù…Ù†Ø° 15 Ø¯Ù‚ÙŠÙ‚Ø©' : '15 minutes ago',
+                icon: FiCalendar,
                 color: Colors.info,
               },
               {
-                title: language === 'ar' ? 'موظف جديد' : 'New Employee Added',
-                time: language === 'ar' ? 'منذ ساعة' : '1 hour ago',
-                icon: FiUsers,
+                title: language === 'ar' ? 'ØªÙ‚ÙŠÙŠÙ… Ø£Ø¯Ø§Ø¡ Ù…ÙƒØªÙ…Ù„' : 'Performance Review Completed',
+                time: language === 'ar' ? 'Ù…Ù†Ø° Ø³Ø§Ø¹Ø©' : '1 hour ago',
+                icon: FiBarChart2,
                 color: Colors.warning,
               },
               {
-                title: language === 'ar' ? 'تقرير مالي' : 'Financial Report',
-                time: language === 'ar' ? 'منذ 3 ساعات' : '3 hours ago',
-                icon: FiFileText,
+                title: language === 'ar' ? 'ØªØ­Ø¯ÙŠØ« Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø±ÙˆØ§ØªØ¨' : 'Payroll Data Updated',
+                time: language === 'ar' ? 'Ù…Ù†Ø° 3 Ø³Ø§Ø¹Ø§Øª' : '3 hours ago',
+                icon: FiCreditCard,
                 color: Colors.bronze,
               },
             ].map((activity, i) => {
@@ -1237,35 +1187,8 @@ function DashboardModule({ theme, language, isDarkMode }) {
             })}
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
 
-// ═══════════════════════════════════════════════
-// HR Module Component
-// ═══════════════════════════════════════════════
-function HRModule({ theme, language, isDarkMode }) {
-  return (
-    <div style={{ animation: 'fadeIn 0.5s ease' }}>
-      <h2 style={{
-        fontSize: '2.2rem',
-        fontWeight: 800,
-        marginBottom: '2.5rem',
-        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-      }}>
-        {language === 'ar' ? 'إدارة الموارد البشرية' : 'Human Resources Management'}
-      </h2>
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: '1.75rem',
-      }}>
-        {/* Employee Stats Card */}
+        {/* Department Overview */}
         <div style={{
           background: theme.card,
           borderRadius: '20px',
@@ -1279,256 +1202,211 @@ function HRModule({ theme, language, isDarkMode }) {
             marginBottom: '1.5rem',
             color: theme.text,
           }}>
-            {language === 'ar' ? 'إحصائيات الموظفين' : 'Employee Statistics'}
+            {language === 'ar' ? 'ØªÙˆØ²ÙŠØ¹ Ø§Ù„Ø£Ù‚Ø³Ø§Ù…' : 'Department Distribution'}
           </h3>
-
-          <div style={{ marginTop: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
-              { label: language === 'ar' ? 'إجمالي الموظفين' : 'Total Employees', value: '248', color: Colors.info },
-              { label: language === 'ar' ? 'الحضور اليوم' : 'Present Today', value: '235', color: Colors.success },
-              { label: language === 'ar' ? 'في إجازة' : 'On Leave', value: '13', color: Colors.warning },
-              { label: language === 'ar' ? 'موظفون جدد' : 'New Employees', value: '5', color: Colors.bronze },
-            ].map((stat, i) => (
-              <div key={i} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '0.75rem 0',
-                borderBottom: i < 3 ? `1px solid ${theme.border}` : 'none',
-              }}>
-                <span style={{ color: theme.textMuted }}>{stat.label}</span>
-                <strong style={{
-                  color: stat.color,
-                  fontSize: '1.1rem',
+              { name: language === 'ar' ? 'Ø§Ù„Ø¥Ø¯Ø§Ø±Ø©' : 'Management', count: 12, color: Colors.gold },
+              { name: language === 'ar' ? 'Ø§Ù„Ù…Ø§Ù„ÙŠØ©' : 'Finance', count: 35, color: Colors.success },
+              { name: language === 'ar' ? 'Ø§Ù„ØªÙ‚Ù†ÙŠØ©' : 'IT', count: 48, color: Colors.info },
+              { name: language === 'ar' ? 'Ø§Ù„Ø¥Ù†ØªØ§Ø¬' : 'Production', count: 85, color: Colors.bronze },
+              { name: language === 'ar' ? 'Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª' : 'Sales', count: 42, color: '#8b5cf6' },
+              { name: language === 'ar' ? 'Ø§Ù„Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª' : 'Logistics', count: 26, color: Colors.warning },
+            ].map((dept, i) => (
+              <div key={i}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                  <span style={{ color: theme.text, fontSize: '0.9rem', fontWeight: 500 }}>{dept.name}</span>
+                  <span style={{ color: theme.textMuted, fontSize: '0.85rem' }}>{dept.count}</span>
+                </div>
+                <div style={{
+                  height: '8px',
+                  background: theme.surface,
+                  borderRadius: '4px',
+                  overflow: 'hidden',
                 }}>
-                  {stat.value}
-                </strong>
+                  <div style={{
+                    height: '100%',
+                    width: `${(dept.count / 85) * 100}%`,
+                    background: dept.color,
+                    borderRadius: '4px',
+                    transition: 'width 1s ease',
+                  }} />
+                </div>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Quick Actions Card */}
-        <div style={{
-          background: theme.card,
-          borderRadius: '20px',
-          padding: '2rem',
-          border: `1px solid ${theme.border}`,
-          boxShadow: theme.shadow,
-        }}>
-          <h3 style={{
-            fontSize: '1.3rem',
-            fontWeight: 700,
-            marginBottom: '1.5rem',
-            color: theme.text,
-          }}>
-            {language === 'ar' ? 'إجراءات سريعة' : 'Quick Actions'}
-          </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {[
-              {
-                label: language === 'ar' ? 'إضافة موظف جديد' : 'Add New Employee',
-                icon: FiUsers,
-                primary: true,
-              },
-              {
-                label: language === 'ar' ? 'تسجيل الحضور' : 'Mark Attendance',
-                icon: FiCheckCircle,
-              },
-              {
-                label: language === 'ar' ? 'طلبات الإجازة' : 'Leave Requests',
-                icon: FiCalendar,
-                badge: '3',
-              },
-              {
-                label: language === 'ar' ? 'كشف الرواتب' : 'Payroll',
-                icon: FiCreditCard,
-              },
-            ].map((action, i) => {
-              const Icon = action.icon;
-              return (
-                <button
-                  key={i}
-                  style={{
-                    padding: '1rem',
-                    background: action.primary ?
-                      `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})` :
-                      theme.surface,
-                    color: action.primary ?
-                      (isDarkMode ? Colors.bgDark : '#fff') :
-                      theme.text,
-                    border: action.primary ? 'none' : `1px solid ${theme.border}`,
-                    borderRadius: '12px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                    fontWeight: 600,
-                    fontSize: '0.95rem',
-                    position: 'relative',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = `0 8px 20px ${theme.accent}30`;
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <Icon size={20} />
-                  {action.label}
-                  {action.badge && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '8px',
-                      right: '8px',
-                      background: Colors.error,
-                      color: '#fff',
-                      borderRadius: '10px',
-                      padding: '2px 8px',
-                      fontSize: '0.75rem',
-                      fontWeight: 700,
-                    }}>
-                      {action.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </div>
   );
 }
 
-// ═══════════════════════════════════════════════
-// Accounting Module Component
-// ═══════════════════════════════════════════════
-function AccountingModule({ theme, language, isDarkMode }) {
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// HR Sub-Module Component (Attendance, Leaves, Payroll, etc.)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function HRSubModule({ module, theme, language, isDarkMode }) {
+  const moduleConfig = {
+    attendance: {
+      title: language === 'ar' ? 'Ø§Ù„Ø­Ø¶ÙˆØ± ÙˆØ§Ù„Ø§Ù†ØµØ±Ø§Ù' : 'Attendance Management',
+      subtitle: language === 'ar' ? 'ØªØªØ¨Ø¹ Ø­Ø¶ÙˆØ± ÙˆØ§Ù†ØµØ±Ø§Ù Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†' : 'Track employee attendance and work hours',
+      icon: FiCheckCircle,
+      data: [
+        { name: language === 'ar' ? 'Ø£Ø­Ù…Ø¯ Ø§Ù„ÙØ§Ø±Ø³ÙŠ' : 'Ahmed Al-Farsi', status: language === 'ar' ? 'Ø­Ø§Ø¶Ø±' : 'Present', time: '08:00', statusColor: Colors.success },
+        { name: language === 'ar' ? 'Ø±ÙŠÙ… Ø§Ù„Ø­Ø±Ø¨ÙŠ' : 'Reem Al-Harbi', status: language === 'ar' ? 'Ø­Ø§Ø¶Ø±' : 'Present', time: '08:15', statusColor: Colors.success },
+        { name: language === 'ar' ? 'Ø¹Ù…Ø± Ø¢Ù„ Ø³Ø¹ÙˆØ¯' : 'Omar Al-Saud', status: language === 'ar' ? 'Ù…ØªØ£Ø®Ø±' : 'Late', time: '09:30', statusColor: Colors.warning },
+        { name: language === 'ar' ? 'Ù„ÙŠÙ„Ù‰ Ø¥Ø¨Ø±Ø§Ù‡ÙŠÙ…' : 'Layla Ibrahim', status: language === 'ar' ? 'ØºØ§Ø¦Ø¨' : 'Absent', time: '--', statusColor: Colors.error },
+        { name: language === 'ar' ? 'Ø­Ø³Ù† Ø§Ù„Ù‚Ø­Ø·Ø§Ù†ÙŠ' : 'Hassan Al-Qahtani', status: language === 'ar' ? 'Ø­Ø§Ø¶Ø±' : 'Present', time: '07:55', statusColor: Colors.success },
+      ]
+    },
+    leaves: {
+      title: language === 'ar' ? 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø¥Ø¬Ø§Ø²Ø§Øª' : 'Leave Management',
+      subtitle: language === 'ar' ? 'Ø¹Ø±Ø¶ ÙˆØ¥Ø¯Ø§Ø±Ø© Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø¥Ø¬Ø§Ø²Ø§Øª' : 'View and manage leave requests',
+      icon: FiCalendar,
+      data: [
+        { name: language === 'ar' ? 'Ù…Ù‡Ø§ Ø§Ù„Ø²Ù‡Ø±Ø§Ù†ÙŠ' : 'Maha Al-Zahrani', status: language === 'ar' ? 'Ù…Ø¹Ù„Ù‚' : 'Pending', time: '23-26 Ø£Ø¨Ø±ÙŠÙ„', statusColor: Colors.warning },
+        { name: language === 'ar' ? 'ÙÙŠØµÙ„ Ø§Ù„Ù‚Ø­Ø·Ø§Ù†ÙŠ' : 'Faisal Al-Qahtani', status: language === 'ar' ? 'Ù…ÙˆØ§ÙÙ‚ Ø¹Ù„ÙŠÙ‡' : 'Approved', time: '23-25 Ø£Ø¨Ø±ÙŠÙ„', statusColor: Colors.success },
+        { name: language === 'ar' ? 'Ù†ÙˆØ±Ø© Ø§Ù„Ø³Ø§Ù„Ù…' : 'Noura Al-Salem', status: language === 'ar' ? 'Ù…Ø¹Ù„Ù‚' : 'Pending', time: '28-30 Ø£Ø¨Ø±ÙŠÙ„', statusColor: Colors.warning },
+      ]
+    },
+    payroll: {
+      title: language === 'ar' ? 'Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø±ÙˆØ§ØªØ¨' : 'Payroll Management',
+      subtitle: language === 'ar' ? 'Ù…Ø¹Ø§Ù„Ø¬Ø© ÙˆØ¥Ø¯Ø§Ø±Ø© Ø±ÙˆØ§ØªØ¨ Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†' : 'Process and manage employee salaries',
+      icon: FiCreditCard,
+      data: [
+        { name: language === 'ar' ? 'Ù‚Ø³Ù… Ø§Ù„Ø¥Ø¯Ø§Ø±Ø©' : 'Management Dept', status: language === 'ar' ? 'ØªÙ… Ø§Ù„Ø¯ÙØ¹' : 'Paid', time: '85,000 Ø±.Ø³', statusColor: Colors.success },
+        { name: language === 'ar' ? 'Ù‚Ø³Ù… Ø§Ù„ØªÙ‚Ù†ÙŠØ©' : 'IT Dept', status: language === 'ar' ? 'ØªÙ… Ø§Ù„Ø¯ÙØ¹' : 'Paid', time: '120,000 Ø±.Ø³', statusColor: Colors.success },
+        { name: language === 'ar' ? 'Ù‚Ø³Ù… Ø§Ù„Ø¥Ù†ØªØ§Ø¬' : 'Production Dept', status: language === 'ar' ? 'Ù‚ÙŠØ¯ Ø§Ù„Ù…Ø¹Ø§Ù„Ø¬Ø©' : 'Processing', time: '210,000 Ø±.Ø³', statusColor: Colors.warning },
+      ]
+    },
+    recruitment: {
+      title: language === 'ar' ? 'Ø§Ù„ØªÙˆØ¸ÙŠÙ' : 'Recruitment',
+      subtitle: language === 'ar' ? 'Ø¥Ø¯Ø§Ø±Ø© Ø¹Ù…Ù„ÙŠØ§Øª Ø§Ù„ØªÙˆØ¸ÙŠÙ ÙˆØ§Ù„Ù…Ù‚Ø§Ø¨Ù„Ø§Øª' : 'Manage hiring and interviews',
+      icon: FiActivity,
+      data: [
+        { name: language === 'ar' ? 'Ù…Ù‡Ù†Ø¯Ø³ Ø¨Ø±Ù…Ø¬ÙŠØ§Øª' : 'Software Engineer', status: language === 'ar' ? 'Ù…ÙØªÙˆØ­' : 'Open', time: '12 Ù…ØªÙ‚Ø¯Ù…', statusColor: Colors.info },
+        { name: language === 'ar' ? 'Ù…Ø­Ø§Ø³Ø¨' : 'Accountant', status: language === 'ar' ? 'Ù…Ù‚Ø§Ø¨Ù„Ø§Øª' : 'Interviews', time: '5 Ù…Ø±Ø´Ø­ÙŠÙ†', statusColor: Colors.warning },
+        { name: language === 'ar' ? 'Ù…Ø¯ÙŠØ± Ù…Ø´Ø§Ø±ÙŠØ¹' : 'Project Manager', status: language === 'ar' ? 'Ù…ÙØªÙˆØ­' : 'Open', time: '8 Ù…ØªÙ‚Ø¯Ù…', statusColor: Colors.info },
+      ]
+    },
+    performance: {
+      title: language === 'ar' ? 'ØªÙ‚ÙŠÙŠÙ… Ø§Ù„Ø£Ø¯Ø§Ø¡' : 'Performance Reviews',
+      subtitle: language === 'ar' ? 'ØªÙ‚ÙŠÙŠÙ…Ø§Øª ÙˆÙ…Ø±Ø§Ø¬Ø¹Ø§Øª Ø£Ø¯Ø§Ø¡ Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†' : 'Employee performance evaluations',
+      icon: FiBarChart2,
+      data: [
+        { name: language === 'ar' ? 'Ø£Ø­Ù…Ø¯ Ø§Ù„ÙØ§Ø±Ø³ÙŠ' : 'Ahmed Al-Farsi', status: language === 'ar' ? 'Ù…Ù…ØªØ§Ø²' : 'Excellent', time: '95%', statusColor: Colors.success },
+        { name: language === 'ar' ? 'Ø±ÙŠÙ… Ø§Ù„Ø­Ø±Ø¨ÙŠ' : 'Reem Al-Harbi', status: language === 'ar' ? 'Ø¬ÙŠØ¯ Ø¬Ø¯Ø§Ù‹' : 'Very Good', time: '88%', statusColor: Colors.info },
+        { name: language === 'ar' ? 'Ø¹Ù…Ø± Ø¢Ù„ Ø³Ø¹ÙˆØ¯' : 'Omar Al-Saud', status: language === 'ar' ? 'Ø¬ÙŠØ¯' : 'Good', time: '75%', statusColor: Colors.warning },
+      ]
+    },
+  };
+
+  const config = moduleConfig[module] || moduleConfig.attendance;
+  const Icon = config.icon;
+
   return (
     <div style={{ animation: 'fadeIn 0.5s ease' }}>
-      <h2 style={{
-        fontSize: '2.2rem',
-        fontWeight: 800,
-        marginBottom: '2.5rem',
-        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-      }}>
-        {language === 'ar' ? 'المحاسبة والمالية' : 'Accounting & Finance'}
-      </h2>
-
-      <div style={{
-        background: theme.card,
-        borderRadius: '20px',
-        padding: '2.5rem',
-        border: `1px solid ${theme.border}`,
-        boxShadow: theme.shadow,
-      }}>
-        <h3 style={{
-          fontSize: '1.5rem',
-          fontWeight: 700,
-          marginBottom: '1rem',
-          color: theme.text,
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h2 style={{
+          fontSize: '2.2rem',
+          fontWeight: 800,
+          marginBottom: '0.5rem',
+          background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
         }}>
-          {language === 'ar' ? 'الملخص المالي' : 'Financial Summary'}
-        </h3>
-        <p style={{ color: theme.textMuted, fontSize: '1rem', marginBottom: '2rem' }}>
-          {language === 'ar' ?
-            'عرض البيانات المالية والحسابات للفترة الحالية' :
-            'Display financial data and accounts for the current period'
-          }
-        </p>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1.5rem',
-          marginTop: '2rem',
-        }}>
-          {[
-            { label: language === 'ar' ? 'الأصول' : 'Assets', value: '5.2M', color: Colors.success },
-            { label: language === 'ar' ? 'الخصوم' : 'Liabilities', value: '1.8M', color: Colors.error },
-            { label: language === 'ar' ? 'حقوق الملكية' : 'Equity', value: '3.4M', color: Colors.info },
-            { label: language === 'ar' ? 'الأرباح' : 'Profit', value: '450K', color: Colors.bronze },
-          ].map((item, i) => (
-            <div key={i} style={{
-              background: theme.surface,
-              borderRadius: '12px',
-              padding: '1.5rem',
-              textAlign: 'center',
-              border: `1px solid ${theme.border}`,
-            }}>
-              <p style={{
-                color: theme.textMuted,
-                fontSize: '0.9rem',
-                marginBottom: '0.5rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}>
-                {item.label}
-              </p>
-              <h4 style={{
-                color: item.color,
-                fontSize: '1.8rem',
-                margin: 0,
-                fontWeight: 800,
-              }}>
-                {item.value}
-              </h4>
-            </div>
-          ))}
-        </div>
+          {config.title}
+        </h2>
+        <p style={{ color: theme.textMuted, fontSize: '1rem' }}>{config.subtitle}</p>
       </div>
-    </div>
-  );
-}
 
-// ═══════════════════════════════════════════════
-// Inventory Module Component
-// ═══════════════════════════════════════════════
-function InventoryModule({ theme, language, isDarkMode }) {
-  return (
-    <div style={{ animation: 'fadeIn 0.5s ease' }}>
-      <h2 style={{
-        fontSize: '2.2rem',
-        fontWeight: 800,
-        marginBottom: '2.5rem',
-        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-      }}>
-        {language === 'ar' ? 'إدارة المخزون' : 'Inventory Management'}
-      </h2>
-
+      {/* Data Table */}
       <div style={{
         background: theme.card,
         borderRadius: '20px',
-        padding: '2.5rem',
+        padding: '2rem',
         border: `1px solid ${theme.border}`,
         boxShadow: theme.shadow,
       }}>
         <div style={{
           display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          justifyContent: 'center',
-          height: '300px',
-          color: theme.textMuted,
+          marginBottom: '1.5rem',
         }}>
-          <div style={{ textAlign: 'center' }}>
-            <FiBox size={64} style={{ marginBottom: '1rem', color: theme.accent }} />
-            <h3 style={{ color: theme.text, marginBottom: '0.5rem' }}>
-              {language === 'ar' ? 'نظام المخزون' : 'Inventory System'}
-            </h3>
-            <p>{language === 'ar' ? 'قريباً...' : 'Coming Soon...'}</p>
-          </div>
+          <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: theme.text }}>
+            {language === 'ar' ? 'Ø§Ù„Ø³Ø¬Ù„Ø§Øª' : 'Records'}
+          </h3>
+          <button style={{
+            background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
+            color: isDarkMode ? Colors.bgDark : '#fff',
+            border: 'none',
+            borderRadius: '12px',
+            padding: '0.75rem 1.5rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            transition: 'all 0.3s',
+            fontFamily: 'inherit',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${theme.accent}30`; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
+            <Icon size={18} />
+            {language === 'ar' ? 'Ø¥Ø¶Ø§ÙØ© Ø¬Ø¯ÙŠØ¯' : 'Add New'}
+          </button>
         </div>
+
+        {config.data.map((item, i) => (
+          <div
+            key={i}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '1.25rem 1rem',
+              borderBottom: i < config.data.length - 1 ? `1px solid ${theme.border}` : 'none',
+              transition: 'all 0.2s',
+              borderRadius: '12px',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = `${theme.accent}08`; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: `${theme.accent}15`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: theme.accent,
+                fontWeight: 700,
+                fontSize: '0.85rem',
+              }}>
+                {item.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+              </div>
+              <div>
+                <p style={{ margin: 0, fontWeight: 600, color: theme.text }}>{item.name}</p>
+                <span style={{ fontSize: '0.85rem', color: theme.textMuted }}>{item.time}</span>
+              </div>
+            </div>
+            <span style={{
+              background: `${item.statusColor}18`,
+              color: item.statusColor,
+              padding: '0.4rem 1rem',
+              borderRadius: '20px',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+            }}>
+              {item.status}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

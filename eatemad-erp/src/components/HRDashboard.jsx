@@ -141,9 +141,9 @@ function HRDashboard({ language = 'ar', isDarkMode = true, theme }) {
 
   // HR Manager data
   const hrManager = {
-    name: language === 'ar' ? 'أكرم قاسم' : 'Akram Qasim',
+    name: language === 'ar' ? 'زيد العزام' : 'Zaid Al-Azzam',
     role: language === 'ar' ? 'مدير الموارد البشرية' : 'HR Manager',
-    avatar: 'AQ',
+    avatar: 'ZA',
   };
 
   // Theme colors

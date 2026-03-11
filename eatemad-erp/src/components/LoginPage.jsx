@@ -52,7 +52,7 @@ function LoginPage({ onLogin, language = 'ar', setLanguage, isDarkMode = true })
         const demoUser = {
           id: 'demo-user',
           email: demoCredentials.email,
-          full_name: 'مدير النظام',
+          full_name: 'زيد العزام',
           role: 'admin',
           access_token: 'demo-token'
         };
