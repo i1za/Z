@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiUser, FiLock, FiEye, FiEyeOff, FiGlobe } from 'react-icons/fi';
+import { getRolePermissions, getRoleTitle } from '../config/roleConfig';
 
 // Brand Colors - Matching HR1 Design
 const Colors = {
@@ -50,7 +51,7 @@ const USERS_DATABASE = {
     title: 'مدير الموارد البشرية',
     titleEn: 'HR Manager',
     department: 'الموارد البشرية',
-    permissions: ['hr', 'employees', 'attendance', 'leaves', 'payroll', 'reports'],
+    permissions: ['hr', 'employees', 'attendance', 'leaves', 'payroll', 'recruitment', 'performance', 'reports'],
     email: 'akram@eatemad.com'
   },
   'sarah.ahmad': {
@@ -99,6 +100,14 @@ function LoginPage({ onLogin, language = 'ar', setLanguage }) {
       const user = USERS_DATABASE[username];
 
       if (user && user.password === password) {
+        const resolvedPermissions = Array.isArray(user.permissions) && user.permissions.length > 0
+          ? user.permissions
+          : getRolePermissions(user.role);
+
+        const resolvedTitle = language === 'ar'
+          ? (user.title || getRoleTitle(user.role, 'ar'))
+          : (user.titleEn || getRoleTitle(user.role, 'en'));
+
         // Successful login
         const userData = {
           id: username,
@@ -106,9 +115,9 @@ function LoginPage({ onLogin, language = 'ar', setLanguage }) {
           fullName: user.fullName,
           englishName: user.englishName,
           role: user.role,
-          title: language === 'ar' ? user.title : user.titleEn,
+          title: resolvedTitle,
           department: user.department,
-          permissions: user.permissions,
+          permissions: resolvedPermissions,
           email: user.email,
           loginTime: new Date().toISOString()
         };

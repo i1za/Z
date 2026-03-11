@@ -2,6 +2,25 @@ import React, { useState, useEffect } from 'react';
 import LoginPage from './components/LoginPage';
 import ERPSystemLuxury from './ERPSystemLuxury';
 import { isAuthenticated, getCurrentUser, api } from './config/supabase';
+import { getRolePermissions, getRoleTitle } from './config/roleConfig';
+
+const normalizeUser = (rawUser, language = 'ar') => {
+  if (!rawUser) return null;
+
+  const fullName = rawUser.fullName || rawUser.name || '';
+  const englishName = rawUser.englishName || fullName;
+  const permissions = Array.isArray(rawUser.permissions) && rawUser.permissions.length > 0
+    ? rawUser.permissions
+    : getRolePermissions(rawUser.role);
+
+  return {
+    ...rawUser,
+    fullName,
+    englishName,
+    permissions,
+    title: rawUser.title || getRoleTitle(rawUser.role, language),
+  };
+};
 
 function AppMain() {
   const [user, setUser] = useState(null);
@@ -10,14 +29,14 @@ function AppMain() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in
-    checkAuth();
-
     // Load saved preferences
     const savedLang = localStorage.getItem('language') || 'ar';
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setLanguage(savedLang);
     setIsDarkMode(savedTheme === 'dark');
+
+    // Check if user is already logged in
+    checkAuth(savedLang);
   }, []);
 
   // MUST be before any conditional returns (React Hooks rule)
@@ -28,18 +47,20 @@ function AppMain() {
     }
   }, [user]);
 
-  const checkAuth = () => {
+  const checkAuth = (lang = 'ar') => {
     if (isAuthenticated()) {
       const currentUser = getCurrentUser();
       if (currentUser) {
-        setUser(currentUser);
+        setUser(normalizeUser(currentUser, lang));
       }
     }
     setIsLoading(false);
   };
 
   const handleLogin = (userData) => {
-    setUser(userData);
+    const normalizedUser = normalizeUser(userData, language);
+    setUser(normalizedUser);
+    localStorage.setItem('user', JSON.stringify(normalizedUser));
   };
 
   const handleLogout = async () => {
@@ -56,6 +77,12 @@ function AppMain() {
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     localStorage.setItem('language', lang);
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, title: getRoleTitle(prev.role, lang) };
+      localStorage.setItem('user', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const handleThemeChange = (theme) => {
@@ -109,7 +136,16 @@ function AppMain() {
     );
   }
 
-  return <ERPSystemLuxury />;
+  return (
+    <ERPSystemLuxury
+      user={user}
+      language={language}
+      isDarkMode={isDarkMode}
+      onLogout={handleLogout}
+      onLanguageChange={handleLanguageChange}
+      onThemeChange={handleThemeChange}
+    />
+  );
 }
 
 export default AppMain;

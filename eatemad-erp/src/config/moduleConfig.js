@@ -1,0 +1,51 @@
+export const MODULE_CONFIG = [
+  {
+    id: "dashboard",
+    permission: "hr",
+    iconKey: "grid",
+    labels: { ar: "لوحة التحكم", en: "Dashboard" },
+    gradient: "linear-gradient(135deg, #d4a574, #b8935f)",
+  },
+  {
+    id: "employees",
+    permission: "employees",
+    iconKey: "users",
+    labels: { ar: "الموظفين", en: "Employees" },
+    gradient: "linear-gradient(135deg, #8b2c2c, #c73e3e)",
+  },
+  {
+    id: "attendance",
+    permission: "attendance",
+    iconKey: "checkCircle",
+    labels: { ar: "الحضور والانصراف", en: "Attendance" },
+    gradient: "linear-gradient(135deg, #22c55e, #16a34a)",
+  },
+  {
+    id: "leaves",
+    permission: "leaves",
+    iconKey: "calendar",
+    labels: { ar: "الإجازات", en: "Leaves" },
+    gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
+  },
+  {
+    id: "payroll",
+    permission: "payroll",
+    iconKey: "creditCard",
+    labels: { ar: "الرواتب", en: "Payroll" },
+    gradient: "linear-gradient(135deg, #f59e0b, #d97706)",
+  },
+  {
+    id: "recruitment",
+    permission: "recruitment",
+    iconKey: "activity",
+    labels: { ar: "التوظيف", en: "Recruitment" },
+    gradient: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+  },
+  {
+    id: "performance",
+    permission: "performance",
+    iconKey: "barChart",
+    labels: { ar: "تقييم الأداء", en: "Performance" },
+    gradient: "linear-gradient(135deg, #ef4444, #dc2626)",
+  },
+];
