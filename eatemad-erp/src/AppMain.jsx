@@ -246,13 +246,22 @@ function AppMain() {
   }, [user]);
 
   const checkAuth = (lang = "ar") => {
-    if (isAuthenticated()) {
-      const currentUser = getCurrentUser();
-      if (currentUser) {
-        setUser(normalizeUser(currentUser, lang));
-        // No welcome banner on refresh — only on fresh login
-      }
+    const hasActiveSession = isAuthenticated();
+
+    if (hasActiveSession) {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      setUser(null);
+      setShowWelcome(false);
+      setIsLoading(false);
+      return;
     }
+
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      setUser(normalizeUser(currentUser, lang));
+    }
+
     setIsLoading(false);
   };
 
