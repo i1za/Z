@@ -161,14 +161,9 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
         department = profileRes.data.department || "";
       }
 
-      const isAdmin =
-        role === "admin" ||
-        dbUser.email?.includes("admin") ||
-        dbUser.email?.toLowerCase() === "zaid@eatemad.com" ||
-        loginInput.toLowerCase() === "zaid.alazzam";
-      const resolvedRole = isAdmin ? "admin" : role;
+      const resolvedRole = role === "admin" ? "admin" : role;
       const resolvedTitle = getRoleTitle(resolvedRole, language);
-      const resolvedPermissions = isAdmin ? ["*"] : getRolePermissions(resolvedRole);
+      const resolvedPermissions = getRolePermissions(resolvedRole);
 
       userData = {
         id: dbUser.id,
@@ -205,10 +200,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
         return;
       }
 
-      const resolvedPermissions =
-        Array.isArray(localUser.permissions) && localUser.permissions.length > 0
-          ? localUser.permissions
-          : getRolePermissions(localUser.role);
+      const resolvedPermissions = getRolePermissions(localUser.role);
 
       const resolvedTitle =
         language === "ar"
