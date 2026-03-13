@@ -79,7 +79,7 @@ function WelcomeOverlay({ user, language, onDone }) {
         alignItems: "center",
         justifyContent: "center",
         background:
-          "radial-gradient(circle at 50% 40%, rgba(212,165,116,0.18), transparent 60%), rgba(10,8,6,0.94)",
+          "radial-gradient(circle at 50% 35%, rgba(184,148,106,0.22), transparent 58%), linear-gradient(145deg, rgba(26,23,24,0.96), rgba(45,46,49,0.94))",
         backdropFilter: "blur(8px)",
         opacity: visible ? 1 : 0,
         transition: "opacity 0.5s ease",
@@ -102,14 +102,14 @@ function WelcomeOverlay({ user, language, onDone }) {
             width: 90,
             height: 90,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #d4a574, #b8935f)",
+            background: "linear-gradient(135deg, #7d0a12, #b8946a)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             margin: "0 auto 1.3rem",
             boxShadow:
-              "0 0 60px rgba(212,165,116,0.5), 0 0 120px rgba(212,165,116,0.2)",
-            border: "3px solid rgba(232,201,160,0.6)",
+              "0 0 60px rgba(125,10,18,0.45), 0 0 120px rgba(184,148,106,0.25)",
+            border: "3px solid rgba(250,232,232,0.45)",
           }}
         >
           <img
@@ -127,7 +127,7 @@ function WelcomeOverlay({ user, language, onDone }) {
           style={{
             margin: "0 0 0.3rem",
             fontSize: "1.1rem",
-            color: "#b8a088",
+            color: "#d5c3c3",
             fontFamily:
               language === "ar"
                 ? "'Cairo', 'Tajawal', sans-serif"
@@ -143,7 +143,7 @@ function WelcomeOverlay({ user, language, onDone }) {
             margin: "0 0 0.4rem",
             fontSize: "2.2rem",
             fontWeight: 800,
-            background: "linear-gradient(135deg, #e8c9a0, #d4a574, #b8935f)",
+            background: "linear-gradient(135deg, #fae8e8, #b8946a, #7d0a12)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -162,7 +162,7 @@ function WelcomeOverlay({ user, language, onDone }) {
             style={{
               margin: "0 0 1rem",
               fontSize: "0.95rem",
-              color: "#d4a574",
+              color: "#b8946a",
               fontWeight: 600,
             }}
           >
@@ -175,7 +175,7 @@ function WelcomeOverlay({ user, language, onDone }) {
           style={{
             margin: "0 0 1.5rem",
             fontSize: "0.92rem",
-            color: "#b8a088",
+            color: "#d5c3c3",
             lineHeight: 1.7,
           }}
         >
@@ -202,7 +202,7 @@ function WelcomeOverlay({ user, language, onDone }) {
         </div>
 
         <p
-          style={{ margin: "0.8rem 0 0", color: "#6b5a47", fontSize: "0.78rem" }}
+          style={{ margin: "0.8rem 0 0", color: "#ad9898", fontSize: "0.78rem" }}
         >
           {language === "ar" ? "انقر للمتابعة" : "Click to continue"}
         </p>

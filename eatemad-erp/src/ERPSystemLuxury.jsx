@@ -33,22 +33,22 @@ import { userHasPermission } from "./config/roleConfig";
 import { useHRData } from "./hooks/useHRData";
 
 const Colors = {
-  gold: "#d4a574",
-  goldLight: "#e8c9a0",
-  goldDark: "#b8935f",
-  darkRed: "#8b2c2c",
-  red: "#c73e3e",
-  bgDark: "#0f0c0a",
-  bgPrimary: "#1a1410",
-  bgSecondary: "#201812",
+  gold: "#b8946a",
+  goldLight: "#d7bf9d",
+  goldDark: "#966334",
+  darkRed: "#7d0a12",
+  red: "#9a1b24",
+  bgDark: "#1a1718",
+  bgPrimary: "#232125",
+  bgSecondary: "#2d2e31",
   bgLight: "#ffffff",
   bgLightPrimary: "#faf8f5",
   bgLightSecondary: "#f5f2ed",
-  textDark: "#f5e6d3",
-  textDarkMuted: "#b8a088",
+  textDark: "#fae8e8",
+  textDarkMuted: "#c6b3b3",
   textLight: "#1a1a1c",
   textLightMuted: "#6b6c70",
-  borderDark: "rgba(212,165,116,0.25)",
+  borderDark: "rgba(250,232,232,0.18)",
   borderLight: "rgba(153,93,38,0.15)",
   shadowDark: "0 20px 60px rgba(0,0,0,0.7)",
   shadowLight: "0 8px 30px rgba(153,93,38,0.12)",
@@ -709,6 +709,8 @@ function ERPSystemLuxury({
 
 function HRSubModule({ module, theme, language, isCompact, moduleData }) {
   const [filter, setFilter] = useState("");
+  const [draft, setDraft] = useState({ name: "", status: "", meta: "" });
+  const [extraRows, setExtraRows] = useState([]);
   const t = (ar, en) => (language === "ar" ? ar : en);
   const config = {
     employees: {
@@ -761,13 +763,29 @@ function HRSubModule({ module, theme, language, isCompact, moduleData }) {
       meta: "ID-1112",
     },
   ];
-  const rows = (
-    c.records && c.records.length ? c.records : fallbackRows
-  ).filter((row) =>
+  const baseRows = c.records && c.records.length ? c.records : fallbackRows;
+  const mergedRows = [...extraRows, ...baseRows];
+  const rows = mergedRows.filter((row) =>
     `${row.name} ${row.status} ${row.meta}`
       .toLowerCase()
       .includes(filter.toLowerCase()),
   );
+
+  const addRow = (event) => {
+    event.preventDefault();
+    if (!draft.name.trim()) return;
+    setExtraRows((prev) => [
+      {
+        id: `manual-${module}-${Date.now()}`,
+        name: draft.name.trim(),
+        status: draft.status.trim() || t("جديد", "New"),
+        meta: draft.meta.trim() || "--",
+        color: theme.accent,
+      },
+      ...prev,
+    ]);
+    setDraft({ name: "", status: "", meta: "" });
+  };
 
   return (
     <div>
@@ -798,25 +816,78 @@ function HRSubModule({ module, theme, language, isCompact, moduleData }) {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "0.7rem",
+            gap: "0.6rem",
+            flexWrap: "wrap",
           }}
         >
           <strong>{t("السجلات", "Records")}</strong>
-          <button
+          <form
+            onSubmit={addRow}
             style={{
-              border: "none",
-              borderRadius: 8,
-              background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
-              color: "#111",
-              padding: "0.45rem 0.75rem",
               display: "flex",
               alignItems: "center",
-              gap: "0.4rem",
-              cursor: "pointer",
-              fontWeight: 700,
+              gap: "0.45rem",
+              flexWrap: "wrap",
+              justifyContent: language === "ar" ? "flex-start" : "flex-end",
             }}
           >
-            <Icon size={15} /> {t("إضافة جديد", "Add New")}
-          </button>
+            <input
+              value={draft.name}
+              onChange={(e) => setDraft((p) => ({ ...p, name: e.target.value }))}
+              placeholder={t("الاسم", "Name")}
+              style={{
+                borderRadius: 8,
+                border: `1px solid ${theme.border}`,
+                background: "transparent",
+                color: theme.text,
+                padding: "0.45rem 0.6rem",
+                fontSize: "0.78rem",
+              }}
+            />
+            <input
+              value={draft.status}
+              onChange={(e) => setDraft((p) => ({ ...p, status: e.target.value }))}
+              placeholder={t("الحالة", "Status")}
+              style={{
+                borderRadius: 8,
+                border: `1px solid ${theme.border}`,
+                background: "transparent",
+                color: theme.text,
+                padding: "0.45rem 0.6rem",
+                fontSize: "0.78rem",
+              }}
+            />
+            <input
+              value={draft.meta}
+              onChange={(e) => setDraft((p) => ({ ...p, meta: e.target.value }))}
+              placeholder={t("ملاحظة", "Meta")}
+              style={{
+                borderRadius: 8,
+                border: `1px solid ${theme.border}`,
+                background: "transparent",
+                color: theme.text,
+                padding: "0.45rem 0.6rem",
+                fontSize: "0.78rem",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                border: "none",
+                borderRadius: 8,
+                background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentLight})`,
+                color: "#111",
+                padding: "0.45rem 0.75rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                cursor: "pointer",
+                fontWeight: 700,
+              }}
+            >
+              <Icon size={15} /> {t("إضافة جديد", "Add New")}
+            </button>
+          </form>
         </div>
         <div style={{ marginBottom: "0.65rem" }}>
           <input

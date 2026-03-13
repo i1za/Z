@@ -14,19 +14,19 @@ import { getRolePermissions, getRoleTitle } from "../config/roleConfig";
 import { api } from "../config/supabase";
 
 const Colors = {
-  gold: "#d4a574",
-  goldLight: "#e8c9a0",
-  goldDark: "#b8935f",
-  darkRed: "#8b2c2c",
-  red: "#c73e3e",
-  bgDark: "#0f0c0a",
-  bgPrimary: "#1a1410",
-  bgSecondary: "#201812",
-  bgCard: "#221912",
-  textDark: "#f5e6d3",
-  textMuted: "#b8a088",
-  borderDark: "rgba(212,165,116,0.24)",
-  borderAccent: "rgba(212,165,116,0.45)",
+  gold: "#b8946a",
+  goldLight: "#fae8e8",
+  goldDark: "#966334",
+  darkRed: "#7d0a12",
+  red: "#9a1b24",
+  bgDark: "#1a1718",
+  bgPrimary: "#232125",
+  bgSecondary: "#2d2e31",
+  bgCard: "#2d2e31",
+  textDark: "#fae8e8",
+  textMuted: "#c9b7b7",
+  borderDark: "rgba(250,232,232,0.24)",
+  borderAccent: "rgba(184,148,106,0.45)",
   success: "#22c55e",
   error: "#ef4444",
 };
@@ -161,7 +161,11 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
         department = profileRes.data.department || "";
       }
 
-      const isAdmin = role === "admin" || dbUser.email?.includes("admin");
+      const isAdmin =
+        role === "admin" ||
+        dbUser.email?.includes("admin") ||
+        dbUser.email?.toLowerCase() === "zaid@eatemad.com" ||
+        loginInput.toLowerCase() === "zaid.alazzam";
       const resolvedRole = isAdmin ? "admin" : role;
       const resolvedTitle = getRoleTitle(resolvedRole, language);
       const resolvedPermissions = isAdmin ? ["*"] : getRolePermissions(resolvedRole);
@@ -239,7 +243,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
       style={{
         minHeight: "100vh",
         background:
-          "radial-gradient(circle at 10% 20%, rgba(212,165,116,0.08), transparent 35%), radial-gradient(circle at 90% 10%, rgba(139,44,44,0.14), transparent 30%), linear-gradient(135deg, #0f0c0a 0%, #1a1410 50%, #0f0c0a 100%)",
+          "radial-gradient(circle at 10% 20%, rgba(184,148,106,0.12), transparent 35%), radial-gradient(circle at 90% 10%, rgba(125,10,18,0.22), transparent 30%), linear-gradient(135deg, #1a1718 0%, #232125 50%, #1a1718 100%)",
         display: "grid",
         gridTemplateColumns: isTablet ? "1fr" : "1.2fr 1fr",
         gap: isTablet ? "1rem" : "2rem",
@@ -259,7 +263,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
           [language === "ar" ? "left" : "right"]: isMobile
             ? "0.9rem"
             : "1.5rem",
-          background: "rgba(34,25,18,0.9)",
+          background: "rgba(45,46,49,0.78)",
           border: `1px solid ${Colors.borderAccent}`,
           borderRadius: "10px",
           padding: "0.55rem 0.85rem",
@@ -282,7 +286,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
             borderRadius: "24px",
             border: `1px solid ${Colors.borderDark}`,
             background:
-              "linear-gradient(150deg, rgba(34,25,18,0.95) 0%, rgba(24,18,13,0.95) 100%)",
+              "linear-gradient(150deg, rgba(45,46,49,0.95) 0%, rgba(26,23,24,0.95) 100%)",
             boxShadow: "0 24px 80px rgba(0,0,0,0.45)",
             padding: "2.2rem",
             position: "relative",
@@ -413,7 +417,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
           borderRadius: "24px",
           border: `1px solid ${Colors.borderDark}`,
           background:
-            "linear-gradient(160deg, rgba(34,25,18,0.98), rgba(18,13,10,0.98))",
+            "linear-gradient(160deg, rgba(45,46,49,0.97), rgba(26,23,24,0.97))",
           boxShadow: "0 24px 80px rgba(0,0,0,0.5)",
           padding: isMobile ? "1.15rem" : "2rem",
           alignSelf: "center",
@@ -575,7 +579,7 @@ function LoginPage({ onLogin, language = "ar", setLanguage }) {
               marginTop: "0.3rem",
               borderRadius: "12px",
               border: "none",
-              background: "linear-gradient(135deg, #d4a574, #8b6239)",
+              background: "linear-gradient(135deg, #7d0a12, #b8946a)",
               color: "#fff",
               fontWeight: 800,
               fontSize: "1rem",
