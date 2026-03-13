@@ -1,5 +1,6 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, getAuthToken } from "../config/supabase";
+import { userHasPermission } from "../config/roleConfig";
 import { buildHRDashboardData } from "../data/hrDashboardData";
 
 const fallbackEmployees = [
@@ -297,6 +298,12 @@ function mapModuleRecords(language, module, records = []) {
         status: translatedStatus,
         meta: item.time_in || item.date || "--",
         color,
+        editValues: {
+          name: item.employee_name || item.full_name || item.name || "",
+          status: item.status || "present",
+          time_in: item.time_in || "",
+          date: item.date || "",
+        },
       };
     });
   }
@@ -326,6 +333,12 @@ function mapModuleRecords(language, module, records = []) {
         status: translatedStatus,
         meta: formatRange(item.start_date, item.end_date),
         color,
+        editValues: {
+          name: item.employee_name || item.full_name || item.name || "",
+          status: item.status || "pending",
+          start_date: item.start_date || "",
+          end_date: item.end_date || "",
+        },
       };
     });
   }
@@ -357,6 +370,12 @@ function mapModuleRecords(language, module, records = []) {
             ? `${item.amount.toLocaleString()} AED`
             : item.period || "--",
         color,
+        editValues: {
+          name: item.department_name || item.name || item.employee_name || "",
+          status: item.status || "processing",
+          amount: item.amount ?? "",
+          period: item.period || "",
+        },
       };
     });
   }
@@ -378,6 +397,11 @@ function mapModuleRecords(language, module, records = []) {
         ? `${item.applicants_count} applicants`
         : "--",
       color: "#3b82f6",
+      editValues: {
+        title: item.title || item.position || "",
+        status: item.status || "open",
+        applicants_count: item.applicants_count ?? "",
+      },
     }));
   }
 
@@ -397,6 +421,12 @@ function mapModuleRecords(language, module, records = []) {
             : t(language, "جيد", "Good"),
       meta: item.score ? `${item.score}%` : item.rating || "--",
       color: "#8b5cf6",
+      editValues: {
+        name: item.employee_name || item.full_name || item.name || "",
+        score: item.score ?? "",
+        rating: item.rating || "",
+        review_date: item.review_date || "",
+      },
     }));
   }
 
@@ -462,10 +492,103 @@ function buildModuleData(language, raw) {
   };
 }
 
+
+
+const MODULE_PERMISSION = {
+  employees: "employees",
+  attendance: "attendance",
+  leaves: "leaves",
+  payroll: "payroll",
+  recruitment: "recruitment",
+  performance: "performance",
+};
+
+function buildModulePayload(module, input = {}, mode = "create") {
+  const isUpdate = mode === "update";
+  if (module === "attendance") {
+    const payload = {
+      employee_name: input.name || input.employee_name || "",
+      status: input.status || "present",
+      time_in: input.time_in || input.meta || null,
+      date: input.date,
+    };
+    if (!isUpdate && !payload.date) {
+      payload.date = new Date().toISOString().slice(0, 10);
+    }
+    if (isUpdate && !input.date) delete payload.date;
+    return payload;
+  }
+  if (module === "leaves") {
+    const payload = {
+      employee_name: input.name || input.employee_name || "",
+      status: input.status || "pending",
+      start_date: input.start_date,
+      end_date: input.end_date || input.start_date,
+    };
+    if (!isUpdate) {
+      const defaultDate = new Date().toISOString().slice(0, 10);
+      payload.start_date = payload.start_date || defaultDate;
+      payload.end_date = payload.end_date || payload.start_date || defaultDate;
+    } else {
+      if (!input.start_date) delete payload.start_date;
+      if (!input.end_date && !input.start_date) delete payload.end_date;
+    }
+    return payload;
+  }
+  if (module === "payroll") {
+    const payload = {
+      name: input.name || "",
+      department_name: input.department_name || input.name || "",
+      status: input.status || "processing",
+      amount: Number(input.amount || 0) || null,
+      period: input.period,
+    };
+    if (!isUpdate && !payload.period) payload.period = new Date().toISOString().slice(0, 7);
+    if (isUpdate && !input.period) delete payload.period;
+    return payload;
+  }
+  if (module === "recruitment") {
+    return {
+      title: input.title || input.name || "",
+      status: input.status || "open",
+      applicants_count: Number(input.applicants_count || 0) || 0,
+    };
+  }
+  if (module === "performance") {
+    const payload = {
+      employee_name: input.name || input.employee_name || "",
+      score: Number(input.score || 0) || 0,
+      rating: input.rating || input.status || "good",
+      review_date: input.review_date,
+    };
+    if (!isUpdate && !payload.review_date) {
+      payload.review_date = new Date().toISOString().slice(0, 10);
+    }
+    if (isUpdate && !input.review_date) delete payload.review_date;
+    return payload;
+  }
+  return input;
+}
+
 export function useHRData({ language = "ar", user } = {}) {
   const [loading, setLoading] = useState(true);
-  const [mutatingEmployees, setMutatingEmployees] = useState(false);
   const [error, setError] = useState("");
+  const [mutating, setMutating] = useState({
+    employees: false,
+    attendance: false,
+    leaves: false,
+    payroll: false,
+    recruitment: false,
+    performance: false,
+  });
+  const [operationError, setOperationError] = useState({
+    employees: "",
+    attendance: "",
+    leaves: "",
+    payroll: "",
+    recruitment: "",
+    performance: "",
+  });
   const [rawData, setRawData] = useState({
     employees: fallbackEmployees,
     attendance: fallbackAttendance,
@@ -476,63 +599,39 @@ export function useHRData({ language = "ar", user } = {}) {
     stats: {},
   });
 
+  const ensurePermission = useCallback((module) => {
+    const permission = MODULE_PERMISSION[module];
+    if (userHasPermission(user?.permissions || [], permission)) return null;
+    return t(language, "ليس لديك صلاحية لهذه العملية", "You do not have permission for this action");
+  }, [language, user?.permissions]);
+
   const refresh = useCallback(async () => {
     setLoading(true);
     setError("");
     const token = getAuthToken();
 
-    const [
-      employeesRes,
-      attendanceRes,
-      leavesRes,
-      payrollRes,
-      recruitmentRes,
-      performanceRes,
-      statsRes,
-    ] = await Promise.all([
-      api.getEmployees(token),
-      api.getAttendanceRecords(token),
-      api.getLeaveRequests(token),
-      api.getPayrollRecords(token),
-      api.getRecruitmentRecords(token),
-      api.getPerformanceRecords(token),
-      api.getDashboardStats(token),
-    ]);
+    const [employeesRes, attendanceRes, leavesRes, payrollRes, recruitmentRes, performanceRes, statsRes] =
+      await Promise.all([
+        api.getEmployees(token),
+        api.getAttendanceRecords(token),
+        api.getLeaveRequests(token),
+        api.getPayrollRecords(token),
+        api.getRecruitmentRecords(token),
+        api.getPerformanceRecords(token),
+        api.getDashboardStats(token),
+      ]);
 
-    const employees =
-      employeesRes?.success && employeesRes.data.length
-        ? employeesRes.data
-        : fallbackEmployees;
-    const attendance =
-      attendanceRes?.success && attendanceRes.data.length
-        ? attendanceRes.data
-        : fallbackAttendance;
-    const leaves =
-      leavesRes?.success && leavesRes.data.length
-        ? leavesRes.data
-        : fallbackLeaves;
-    const payroll =
-      payrollRes?.success && payrollRes.data.length
-        ? payrollRes.data
-        : fallbackPayroll;
-    const recruitment =
-      recruitmentRes?.success && recruitmentRes.data.length
-        ? recruitmentRes.data
-        : fallbackRecruitment;
-    const performance =
-      performanceRes?.success && performanceRes.data.length
-        ? performanceRes.data
-        : fallbackPerformance;
+    const employees = employeesRes?.success && employeesRes.data.length ? employeesRes.data : fallbackEmployees;
+    const attendance = attendanceRes?.success && attendanceRes.data.length ? attendanceRes.data : fallbackAttendance;
+    const leaves = leavesRes?.success && leavesRes.data.length ? leavesRes.data : fallbackLeaves;
+    const payroll = payrollRes?.success && payrollRes.data.length ? payrollRes.data : fallbackPayroll;
+    const recruitment = recruitmentRes?.success && recruitmentRes.data.length ? recruitmentRes.data : fallbackRecruitment;
+    const performance = performanceRes?.success && performanceRes.data.length ? performanceRes.data : fallbackPerformance;
     const stats = statsRes?.success ? statsRes.data || {} : {};
 
-    const hasApiFailure = [
-      employeesRes,
-      attendanceRes,
-      leavesRes,
-      payrollRes,
-      recruitmentRes,
-      performanceRes,
-    ].some((res) => res && !res.success);
+    const hasApiFailure = [employeesRes, attendanceRes, leavesRes, payrollRes, recruitmentRes, performanceRes].some(
+      (res) => res && !res.success,
+    );
 
     if (hasApiFailure) {
       setError(
@@ -544,15 +643,7 @@ export function useHRData({ language = "ar", user } = {}) {
       );
     }
 
-    setRawData({
-      employees,
-      attendance,
-      leaves,
-      payroll,
-      recruitment,
-      performance,
-      stats,
-    });
+    setRawData({ employees, attendance, leaves, payroll, recruitment, performance, stats });
     setLoading(false);
   }, [language]);
 
@@ -560,121 +651,130 @@ export function useHRData({ language = "ar", user } = {}) {
     refresh();
   }, [refresh, language, user?.id]);
 
-  const addEmployee = useCallback(
-    async (employeeInput) => {
-      setMutatingEmployees(true);
-      setError("");
+  const runModuleMutation = useCallback(async (module, operation) => {
+    const permissionError = ensurePermission(module);
+    if (permissionError) {
+      setOperationError((prev) => ({ ...prev, [module]: permissionError }));
+      return { success: false, error: permissionError };
+    }
+
+    setMutating((prev) => ({ ...prev, [module]: true }));
+    setOperationError((prev) => ({ ...prev, [module]: "" }));
+    setError("");
+
+    const result = await operation();
+
+    if (!result?.success) {
+      const message = result?.error || t(language, "تعذر إتمام العملية", "Unable to complete operation");
+      setOperationError((prev) => ({ ...prev, [module]: message }));
+      setMutating((prev) => ({ ...prev, [module]: false }));
+      return { success: false, error: message };
+    }
+
+    await refresh();
+    setMutating((prev) => ({ ...prev, [module]: false }));
+    return { success: true, data: result.data || null };
+  }, [ensurePermission, language, refresh]);
+
+  const addEmployee = useCallback(async (employeeInput) => {
+    return runModuleMutation("employees", async () => {
       const token = getAuthToken();
       const variants = buildEmployeePayloadVariants(employeeInput);
+      return attemptEmployeeMutation({ mode: "create", token, payloadVariants: variants });
+    });
+  }, [runModuleMutation]);
 
-      const result = await attemptEmployeeMutation({
-        mode: "create",
-        token,
-        payloadVariants: variants,
-      });
-
-      if (!result.success) {
-        setMutatingEmployees(false);
-        setError(
-          result.error ||
-            t(language, "تعذر إضافة الموظف", "Unable to add employee"),
-        );
-        return { success: false, error: result.error };
-      }
-
-      await refresh();
-      setMutatingEmployees(false);
-      return { success: true, data: result.data };
-    },
-    [language, refresh],
-  );
-
-  const updateEmployee = useCallback(
-    async (id, employeeInput) => {
-      setMutatingEmployees(true);
-      setError("");
+  const updateEmployee = useCallback(async (id, employeeInput) => {
+    return runModuleMutation("employees", async () => {
       const token = getAuthToken();
       const variants = buildEmployeePayloadVariants(employeeInput);
+      return attemptEmployeeMutation({ mode: "update", token, id, payloadVariants: variants });
+    });
+  }, [runModuleMutation]);
 
-      const result = await attemptEmployeeMutation({
-        mode: "update",
-        token,
-        id,
-        payloadVariants: variants,
-      });
-
-      if (!result.success) {
-        setMutatingEmployees(false);
-        setError(
-          result.error ||
-            t(language, "تعذر تعديل الموظف", "Unable to update employee"),
-        );
-        return { success: false, error: result.error };
-      }
-
-      await refresh();
-      setMutatingEmployees(false);
-      return { success: true, data: result.data };
-    },
-    [language, refresh],
-  );
-
-  const deleteEmployee = useCallback(
-    async (id) => {
-      setMutatingEmployees(true);
-      setError("");
+  const deleteEmployee = useCallback(async (id) => {
+    return runModuleMutation("employees", async () => {
       const token = getAuthToken();
-      const result = await api.deleteEmployee(id, token);
+      return api.deleteEmployee(id, token);
+    });
+  }, [runModuleMutation]);
 
-      if (!result.success) {
-        setMutatingEmployees(false);
-        setError(
-          result.error ||
-            t(language, "تعذر حذف الموظف", "Unable to delete employee"),
-        );
-        return { success: false, error: result.error };
-      }
-
-      await refresh();
-      setMutatingEmployees(false);
-      return { success: true };
+  const moduleApi = {
+    attendance: {
+      create: api.createAttendanceRecord.bind(api),
+      update: api.updateAttendanceRecord.bind(api),
+      remove: api.deleteAttendanceRecord.bind(api),
     },
-    [language, refresh],
-  );
+    leaves: {
+      create: api.createLeaveRequest.bind(api),
+      update: api.updateLeaveRequest.bind(api),
+      remove: api.deleteLeaveRequest.bind(api),
+    },
+    payroll: {
+      create: api.createPayrollRecord.bind(api),
+      update: api.updatePayrollRecord.bind(api),
+      remove: api.deletePayrollRecord.bind(api),
+    },
+    recruitment: {
+      create: api.createRecruitmentRecord.bind(api),
+      update: api.updateRecruitmentRecord.bind(api),
+      remove: api.deleteRecruitmentRecord.bind(api),
+    },
+    performance: {
+      create: api.createPerformanceRecord.bind(api),
+      update: api.updatePerformanceRecord.bind(api),
+      remove: api.deletePerformanceRecord.bind(api),
+    },
+  };
 
-  const dashboardData = useMemo(
-    () =>
-      buildHRDashboardData({
-        language,
-        permissions: user?.permissions || [],
-        source: rawData,
-      }),
+  const addModuleRecord = useCallback(async (module, input) => {
+    return runModuleMutation(module, async () => {
+      const token = getAuthToken();
+      return moduleApi[module].create(buildModulePayload(module, input, "create"), token);
+    });
+  }, [runModuleMutation]);
+
+  const updateModuleRecord = useCallback(async (module, id, input) => {
+    return runModuleMutation(module, async () => {
+      const token = getAuthToken();
+      return moduleApi[module].update(id, buildModulePayload(module, input, "update"), token);
+    });
+  }, [runModuleMutation]);
+
+  const deleteModuleRecord = useCallback(async (module, id) => {
+    return runModuleMutation(module, async () => {
+      const token = getAuthToken();
+      return moduleApi[module].remove(id, token);
+    });
+  }, [runModuleMutation]);
+
+  const dashboardData = useMemo(() =>
+    buildHRDashboardData({ language, permissions: user?.permissions || [], source: rawData }),
     [language, rawData, user?.permissions],
   );
 
-  const moduleData = useMemo(
-    () => buildModuleData(language, rawData),
-    [language, rawData],
-  );
+  const moduleData = useMemo(() => buildModuleData(language, rawData), [language, rawData]);
 
   const employees = useMemo(
-    () =>
-      Array.isArray(rawData.employees)
-        ? rawData.employees.map((item) => normalizeEmployee(item))
-        : [],
+    () => (Array.isArray(rawData.employees) ? rawData.employees.map((item) => normalizeEmployee(item)) : []),
     [rawData.employees],
   );
 
   return {
     loading,
     error,
+    operationError,
     dashboardData,
     moduleData,
     employees,
-    mutatingEmployees,
+    mutatingEmployees: mutating.employees,
+    mutating,
     refresh,
     addEmployee,
     updateEmployee,
     deleteEmployee,
+    addModuleRecord,
+    updateModuleRecord,
+    deleteModuleRecord,
   };
 }
